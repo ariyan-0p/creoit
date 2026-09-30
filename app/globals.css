@@ -6,157 +6,12 @@
 
    Typefaces
    ─────────
-   • Moniqa        → Primary display font   (self-hosted TTF, OFL)
-   • Clash Display → Secondary / UI font    (self-hosted woff2, OFL)
+   • Chivo Mono → Primary font for all roles  (Google Fonts, OFL)
 
-   Both fonts are served from: /public/fonts/
+   Loaded via Google Fonts CDN — no self-hosted files required.
    ================================================================ */
 
 
-/* ================================================================
-   1. MONIQA — SELF-HOSTED (all weights, TTF)
-   ================================================================ */
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-thin.ttf") format("truetype");
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-extralight.ttf") format("truetype");
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-light.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-italic.ttf") format("truetype");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-medium.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-semibold.ttf") format("truetype");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-bold-italic.ttf") format("truetype");
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-extrabold.ttf") format("truetype");
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Moniqa";
-  src: url("/fonts/moniqa-black.ttf") format("truetype");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-
-/* ================================================================
-   2. CLASH DISPLAY — SELF-HOSTED (woff2)
-   ================================================================ */
-
-@font-face {
-  font-family: "Clash Display";
-  src: url("/fonts/clash-display-extralight.woff2") format("woff2");
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Clash Display";
-  src: url("/fonts/clash-display-light.woff2") format("woff2");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Clash Display";
-  src: url("/fonts/clash-display-regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Clash Display";
-  src: url("/fonts/clash-display-medium.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Clash Display";
-  src: url("/fonts/clash-display-semibold.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Clash Display";
-  src: url("/fonts/clash-display-bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
 
 
 /* ================================================================
@@ -266,9 +121,9 @@
      ────────────────────────────────────────────────────────────── */
 
   /* Font Families */
-  --font-primary:     "Moniqa", "Georgia", "Times New Roman", serif;
-  --font-secondary:   "Clash Display", "Inter", system-ui, sans-serif;
-  --font-mono:        "JetBrains Mono", "Fira Code", "Courier New", monospace;
+  --font-primary:     "Chivo Mono", "Courier New", monospace;
+  --font-secondary:   "Chivo Mono", "Courier New", monospace;
+  --font-mono:        "Chivo Mono", "Fira Code", "Courier New", monospace;
 
   /* Semantic font role aliases */
   --font-display:     var(--font-primary);         /* Hero / large headings    */
