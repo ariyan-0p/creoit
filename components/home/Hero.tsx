@@ -129,7 +129,7 @@ export function Hero() {
       ref={root}
       data-nav="dark"
       aria-label="Introduction"
-      className="sticky top-0 z-0 h-[100svh] min-h-[640px] w-full overflow-hidden bg-ink text-paper"
+      className="sticky top-0 z-0 h-[100svh] min-h-[600px] w-full overflow-hidden bg-ink text-paper"
     >
       <div ref={inner} className="absolute inset-0 origin-center will-change-transform">
         <div
@@ -166,12 +166,12 @@ export function Hero() {
         </div>
 
         {/* content */}
-        <div className="absolute inset-0 flex flex-col justify-end px-[var(--pad-in)] pb-[var(--pad-bottom)] pt-32">
-          <p className="mono hero-fade mb-6 flex items-center gap-3 text-paper/70">
+        <div className="absolute inset-0 flex flex-col justify-end px-[var(--pad-in)] pb-[var(--pad-bottom)] pt-[clamp(7rem,15svh,9rem)]">
+          <p className="mono hero-fade mb-[clamp(0.9rem,2.6svh,1.75rem)] flex items-center gap-3 text-paper/70">
             <span className="h-px w-8 bg-lilac" /> 360° creative marketing — Bhopal, India
           </p>
 
-          <h1 className="display grid text-[clamp(3rem,10.6vw,12rem)] leading-[0.9] tracking-[-0.025em]">
+          <h1 className="display grid text-[clamp(2.6rem,min(10.6vw,15svh),12rem)] leading-[0.9] tracking-[-0.025em]">
             <span ref={soft} aria-hidden className="col-start-1 row-start-1 select-none text-paper/55 blur-[7px]">
               <Lines />
             </span>
@@ -194,7 +194,7 @@ export function Hero() {
             </span>
           </h1>
 
-          <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <div className="mt-[clamp(1.25rem,4svh,2.5rem)] flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <p className="hero-fade max-w-md text-[0.95rem] leading-relaxed text-paper/75">
               CREOIT is a collective of creative thinkers, strategists, marketers and makers — helping brands become
               impossible to ignore.

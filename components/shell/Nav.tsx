@@ -8,7 +8,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { NAV_LINKS, SOCIALS, EMAIL } from "@/lib/site";
 import { useLenis } from "@/providers/SmoothScrollProvider";
 import { Clock } from "./Clock";
@@ -60,44 +60,39 @@ export function Nav() {
     document.documentElement.classList.toggle("menu-open", open);
   }, [open]);
 
-  // Theme the nav + HUD by whichever [data-nav] section sits under the bar.
+  // Theme the nav + HUD by whichever [data-nav] section is visibly under the bar.
+  // We ask the browser (elementsFromPoint) instead of relying on scroll-trigger events:
+  // that stays correct with sticky/overlapping sections and through layout refreshes.
   useEffect(() => {
     const root = document.documentElement;
-    const set = (t: string) => root.setAttribute("data-nav-theme", t);
-    set("dark");
-    const triggers: ScrollTrigger[] = [];
-    const build = () => {
-      triggers.forEach((t) => t.kill());
-      triggers.length = 0;
-      document.querySelectorAll<HTMLElement>("[data-nav]").forEach((el) => {
-        triggers.push(
-          ScrollTrigger.create({
-            trigger: el,
-            start: "top 48px",
-            end: "bottom 48px",
-            onToggle: (self) => self.isActive && set(el.dataset.nav!),
-          })
-        );
-      });
-      // Past the end of <main> the fixed footer is showing (dark).
-      const main = document.getElementById("main");
-      if (main) {
-        triggers.push(
-          ScrollTrigger.create({
-            trigger: main,
-            start: "bottom 48px",
-            end: "max",
-            onToggle: (self) => self.isActive && set("dark"),
-          })
-        );
+    let last = "";
+    const update = () => {
+      const els = document.elementsFromPoint(window.innerWidth / 2, 48);
+      let theme = "dark";
+      for (const e of els) {
+        const s = (e as HTMLElement).closest?.<HTMLElement>("[data-nav]");
+        if (s) {
+          theme = s.dataset.nav ?? "dark";
+          break;
+        }
+      }
+      if (theme !== last) {
+        last = theme;
+        root.setAttribute("data-nav-theme", theme);
       }
     };
-    const id = window.setTimeout(build, 50);
+    update();
+    const settle = [120, 600, 1800].map((ms) => window.setTimeout(update, ms));
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    lenis?.on("scroll", update);
     return () => {
-      window.clearTimeout(id);
-      triggers.forEach((t) => t.kill());
+      settle.forEach(window.clearTimeout);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      lenis?.off("scroll", update);
     };
-  }, [pathname]);
+  }, [pathname, lenis]);
 
   // Esc closes.
   useEffect(() => {
