@@ -1,34 +1,21 @@
 /**
- * GSAP Registration — lib/gsap.ts
- *
- * Central place to import and register all GSAP plugins.
- * Import from here instead of directly from "gsap" to ensure
- * plugins are always registered before use.
- *
- * Usage:
- *   import { gsap, ScrollTrigger } from "@/lib/gsap";
+ * GSAP registration — lib/gsap.ts
+ * Single import point so plugins are always registered before use.
  */
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { Flip } from "gsap/Flip";
+import { SplitText } from "gsap/SplitText";
 
-// Register all plugins
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, Flip);
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, Flip, SplitText);
+  if (process.env.NODE_ENV !== "production") (window as unknown as { gsap: typeof gsap }).gsap = gsap;
 }
 
-// Default GSAP config for the project
-gsap.config({
-  nullTargetWarn: false, // suppress warnings for null targets (SSR safety)
-});
+gsap.config({ nullTargetWarn: false });
+gsap.defaults({ ease: "power3.out", duration: 0.8 });
 
-// Default ease used across the site
-gsap.defaults({
-  ease: "power3.out",
-  duration: 0.8,
-});
-
-export { gsap, ScrollTrigger, ScrollToPlugin, Flip };
+export { gsap, ScrollTrigger, ScrollToPlugin, Flip, SplitText };
 export default gsap;

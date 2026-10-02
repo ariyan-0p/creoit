@@ -1,34 +1,21 @@
-import type { Metadata } from "next";
-import { Hero } from "@/components/sections/Hero";
-import { BrandStatement } from "@/components/sections/BrandStatement";
-import { WhatWeDo } from "@/components/sections/WhatWeDo";
-import { HowWeThink } from "@/components/sections/HowWeThink";
-import { FeaturedWork } from "@/components/sections/FeaturedWork";
-import { Results } from "@/components/sections/Results";
-import { OurProcess } from "@/components/sections/OurProcess";
-import { TeamCulture } from "@/components/sections/TeamCulture";
-import { Clients } from "@/components/sections/Clients";
-import { FinalCTA } from "@/components/sections/FinalCTA";
-
-export const metadata: Metadata = {
-  title: "CREOIT — We Create What People Remember",
-  description:
-    "CREOIT is a 360° creative marketing company. Branding, content, performance, digital, events and growth strategy — all under one team.",
-};
+import { Hero } from "@/components/home/Hero";
+import { Manifesto } from "@/components/home/Manifesto";
+import { Lenses } from "@/components/home/Lenses";
+import { Work } from "@/components/home/Work";
+import { Numbers } from "@/components/home/Numbers";
+import { Questions } from "@/components/home/Questions";
+import { Culture } from "@/components/home/Culture";
 
 export default function HomePage() {
   return (
-    <>
+    <div className="relative">
       <Hero />
-      <BrandStatement />
-      <WhatWeDo />
-      <HowWeThink />
-      <FeaturedWork />
-      <Results />
-      <OurProcess />
-      <TeamCulture />
-      <Clients />
-      <FinalCTA />
-    </>
+      <Manifesto />
+      <Lenses />
+      <Work />
+      <Numbers />
+      <Questions />
+      <Culture />
+    </div>
   );
 }

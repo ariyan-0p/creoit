@@ -1,75 +1,47 @@
 "use client";
 
 /**
- * SmoothScrollProvider — providers/SmoothScrollProvider.tsx
+ * SmoothScrollProvider — one clock for everything.
  *
- * Wraps the app with Lenis smooth scroll, synchronized with GSAP's RAF loop.
- * This ensures GSAP ScrollTrigger and Lenis play well together without
- * duplicate requestAnimationFrame loops.
- *
- * Based on: https://lenis.darkroom.engineering/
+ * Lenis is driven by GSAP's ticker (no second rAF loop) and feeds
+ * ScrollTrigger on every tick, so scrubbed animations never drift from
+ * the scroll position. Disabled for prefers-reduced-motion.
  */
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  type ReactNode,
-} from "react";
+import { useEffect, useSyncExternalStore, type ReactNode } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { LENIS_OPTIONS } from "@/lib/lenis";
-
-// ── Context ───────────────────────────────────────────────────────────────
-interface SmoothScrollContextValue {
-  lenis: Lenis | null;
-}
-
-const SmoothScrollContext = createContext<SmoothScrollContextValue>({
-  lenis: null,
-});
+import { lenisStore } from "@/lib/lenis-store";
 
 export function useLenis() {
-  return useContext(SmoothScrollContext).lenis;
+  return useSyncExternalStore(lenisStore.subscribe, lenisStore.get, lenisStore.getServer);
 }
 
-// ── Provider ──────────────────────────────────────────────────────────────
-interface SmoothScrollProviderProps {
-  children: ReactNode;
-}
-
-export default function SmoothScrollProvider({
-  children,
-}: SmoothScrollProviderProps) {
-  const lenisRef = useRef<Lenis | null>(null);
-
+export default function SmoothScrollProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
-    // Instantiate Lenis
-    const lenis = new Lenis(LENIS_OPTIONS);
-    lenisRef.current = lenis;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Sync Lenis scroll position with GSAP ScrollTrigger
-    lenis.on("scroll", ScrollTrigger.update);
+    try {
+      history.scrollRestoration = "manual";
+    } catch {}
 
-    // Use GSAP ticker to drive Lenis RAF (single unified loop)
-    const tickerCallback = (time: number) => {
-      lenis.raf(time * 1000); // GSAP time is in seconds; Lenis needs ms
-    };
+    const instance = new Lenis({ ...LENIS_OPTIONS, autoRaf: false });
+    instance.on("scroll", ScrollTrigger.update);
 
-    gsap.ticker.add(tickerCallback);
-    gsap.ticker.lagSmoothing(0); // Disable lag smoothing for accuracy
+    const tick = (time: number) => instance.raf(time * 1000);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+
+    lenisStore.set(instance);
+    (window as unknown as { __lenis?: Lenis }).__lenis = instance;
 
     return () => {
-      gsap.ticker.remove(tickerCallback);
-      lenis.destroy();
-      lenisRef.current = null;
+      gsap.ticker.remove(tick);
+      instance.destroy();
+      lenisStore.set(null);
     };
   }, []);
 
-  return (
-    <SmoothScrollContext.Provider value={{ lenis: lenisRef.current }}>
-      {children}
-    </SmoothScrollContext.Provider>
-  );
+  return <>{children}</>;
 }
