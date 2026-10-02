@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { PageTransition } from "@/components/layout/PageTransition";
-import { AnimatedText } from "@/components/ui/AnimatedText";
-import { cn } from "@/lib/cn";
+import { PageMotion } from "@/components/ui/PageMotion";
+import { PageHero } from "@/components/page/PageHero";
+import { Pill } from "@/components/ui/Pill";
 
 export const metadata: Metadata = {
   title: "About — We Are CREOIT",
@@ -9,110 +9,98 @@ export const metadata: Metadata = {
     "CREOIT is a team-first creative and marketing organization. We believe great work is a team sport — built by strategists, designers, marketers, filmmakers and thinkers.",
 };
 
-const values = [
-  {
-    number: "01",
-    title: "BE CONSISTENT.",
-    description: "Consistency builds trust.",
-  },
-  {
-    number: "02",
-    title: "BE CREATIVE.",
-    description: "Different thinking creates different results.",
-  },
-  {
-    number: "03",
-    title: "BE LOUD.",
-    description: "Good work deserves attention.",
-  },
+const VALUES = [
+  { n: "01", t: "Be consistent.", d: "Consistency builds trust." },
+  { n: "02", t: "Be creative.", d: "Different thinking creates different results." },
+  { n: "03", t: "Be loud.", d: "Good work deserves attention." },
 ];
+
+const CRAFTS = ["Strategists", "Designers", "Marketers", "Filmmakers", "Thinkers"];
 
 export default function AboutPage() {
   return (
-    <PageTransition>
-      <div className="bg-[var(--creoit-black)]">
-        {/* Hero */}
-        <section className="section min-h-screen pt-32 flex flex-col justify-end" aria-labelledby="about-heading">
-          <div className="container">
-            <p className="section-label">About</p>
-            <AnimatedText
-              text="WE ARE CREOIT."
-              as="h1"
-              id="about-heading"
-              splitBy="word"
-              delay={0.1}
-              stagger={0.08}
-              className="font-display font-bold text-[var(--creoit-off-white)] mb-8"
-            />
-            <p className="font-body text-lg text-[var(--creoit-grey-light)] max-w-xl leading-relaxed">
-              We built CREOIT because we believe good ideas deserve better
-              execution.
-            </p>
-          </div>
-        </section>
+    <PageMotion>
+      <PageHero
+        index="01"
+        label="About"
+        ring="Team first creative"
+        title={
+          <>
+            We are <span className="serif-i text-lilac">CREOIT.</span>
+          </>
+        }
+        lead="We built CREOIT because we believe good ideas deserve better execution."
+      />
 
-        {/* Belief */}
-        <section className="section bg-[var(--creoit-dark)]">
-          <div className="container">
-            <div className="max-w-3xl">
-              <p className="section-label">Our Belief</p>
-              <AnimatedText
-                text="GREAT WORK IS A TEAM SPORT."
-                as="h2"
-                splitBy="word"
-                delay={0}
-                stagger={0.05}
-                className="font-display font-bold text-[var(--creoit-off-white)] mb-8"
-              />
-              <p className="font-body text-[var(--creoit-grey-light)] leading-relaxed">
-                Great work doesn&apos;t happen because one person is brilliant.
-                It happens when different people bring different brilliance
-                together.
-              </p>
-            </div>
-          </div>
-        </section>
+      {/* Belief */}
+      <section data-nav="light" className="relative bg-paper px-[var(--pad)] py-[clamp(4rem,9vw,9rem)] text-ink">
+        <p className="mono mb-8 flex justify-between text-ink/55" data-reveal>
+          <span>Our belief</span>
+          <span className="hidden sm:block">Why we work this way</span>
+        </p>
+        <h2 data-lines className="display max-w-[16ch] text-[clamp(2.4rem,7.2vw,8rem)] leading-[0.96]">
+          Great work is a <span className="serif-i text-signal text-[1.08em]">team sport.</span>
+        </h2>
+        <p data-reveal className="mt-10 max-w-xl text-[1.08rem] leading-relaxed text-ink/75">
+          Great work doesn&apos;t happen because one person is brilliant. It happens when different people bring different
+          brilliance together.
+        </p>
 
-        {/* Values */}
-        <section className="section" aria-labelledby="values-heading">
-          <div className="container">
-            <p className="section-label">Our Values</p>
-            <h2 id="values-heading" className="sr-only">CREOIT Values</h2>
-            <div className="flex flex-col gap-0 divide-y divide-[var(--border)] max-w-3xl">
-              {values.map((value) => (
-                <div key={value.number} className="py-8 flex items-start gap-8">
-                  <span className="font-display text-xs text-[var(--creoit-grey-mid)] mt-1">{value.number}</span>
-                  <div>
-                    <h3 className="font-display font-bold text-2xl md:text-3xl text-[var(--creoit-off-white)] mb-2">
-                      {value.title}
-                    </h3>
-                    <p className="font-body text-[var(--creoit-grey-light)]">{value.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ul className="mt-[clamp(3rem,7vw,7rem)] border-t border-ink/15">
+          {CRAFTS.map((c, i) => (
+            <li
+              key={c}
+              data-reveal
+              className="group flex items-baseline justify-between border-b border-ink/15 py-4 transition-[padding,color] duration-700 ease-[var(--ease)] hover:pl-6 hover:text-signal md:py-5"
+            >
+              <span className="display text-[clamp(2rem,5.6vw,6rem)] leading-none">{c}</span>
+              <span className="mono text-ink/45">0{i + 1}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-        {/* Team CTA */}
-        <section className={cn("section bg-[var(--creoit-dark)]")}>
-          <div className="container text-center">
-            <AnimatedText
-              text="DIFFERENT PEOPLE. DIFFERENT SKILLS. ONE DIRECTION."
-              as="h2"
-              splitBy="word"
-              delay={0}
-              stagger={0.04}
-              className="font-display font-bold text-[var(--creoit-off-white)] mb-6 max-w-3xl mx-auto"
-            />
-            <p className="font-body text-[var(--creoit-grey-light)] max-w-lg mx-auto">
-              {/* TODO: Add team members section when photos are ready */}
-              CREOIT is a team-first organization built around collaboration,
-              creativity and shared growth.
-            </p>
-          </div>
-        </section>
-      </div>
-    </PageTransition>
+      {/* Values */}
+      <section data-nav="dark" className="relative bg-deep px-[var(--pad)] py-[clamp(4rem,9vw,9rem)] text-paper">
+        <p className="mono mb-10 flex justify-between text-paper/55" data-reveal>
+          <span>Our values</span>
+          <span className="hidden sm:block">Three rules, no exceptions</span>
+        </p>
+        <ul>
+          {VALUES.map((v) => (
+            <li
+              key={v.n}
+              data-reveal
+              className="group relative -mx-[var(--pad)] overflow-hidden border-t border-paper/15 px-[var(--pad)] last:border-b"
+            >
+              <span aria-hidden className="absolute inset-0 origin-bottom scale-y-0 bg-signal transition-transform duration-[800ms] ease-[var(--ease)] group-hover:scale-y-100" />
+              <div className="relative grid items-baseline gap-4 py-8 md:grid-cols-[6rem_1fr_auto] md:py-12">
+                <span className="mono text-lilac group-hover:text-paper">{v.n}</span>
+                <h3 className="display text-[clamp(2.6rem,9vw,10rem)] leading-[0.95]">{v.t}</h3>
+                <p className="serif-i max-w-[14ch] text-[clamp(1.4rem,2.2vw,2.2rem)] leading-[1.1] text-paper/75 group-hover:text-paper">{v.d}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Closing */}
+      <section data-nav="light" className="relative bg-paper px-[var(--pad)] py-[clamp(4rem,9vw,9rem)] text-ink">
+        <h2 data-lines className="display max-w-[18ch] text-[clamp(2.2rem,6.2vw,7rem)] leading-[0.98]">
+          Different people. Different skills. <span className="serif-i text-signal text-[1.08em]">One direction.</span>
+        </h2>
+        <p data-reveal className="mt-8 max-w-md text-[1.02rem] leading-relaxed text-ink/70">
+          CREOIT is a team-first organization built around collaboration, creativity and shared growth.
+        </p>
+        <div data-reveal className="mt-10 flex flex-wrap gap-3">
+          <Pill href="/careers" tone="signal" cursor="Join">
+            Join the team
+          </Pill>
+          <Pill href="/work" tone="dark">
+            See the work
+          </Pill>
+        </div>
+      </section>
+    </PageMotion>
   );
 }

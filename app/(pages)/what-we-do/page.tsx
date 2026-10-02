@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { PageTransition } from "@/components/layout/PageTransition";
-import { AnimatedText } from "@/components/ui/AnimatedText";
-import { services } from "@/content/services";
-import { cn } from "@/lib/cn";
+import { PageMotion } from "@/components/ui/PageMotion";
+import { PageHero } from "@/components/page/PageHero";
+import { ServicesList } from "@/components/page/ServicesList";
 
 export const metadata: Metadata = {
   title: "What We Do — Services",
@@ -10,57 +9,54 @@ export const metadata: Metadata = {
     "CREOIT offers branding, content production, performance marketing, digital experiences, event marketing, and growth strategy. One team, multiple powers.",
 };
 
+const STEPS = [
+  { n: "01", t: "Understand", d: "We understand the business, market and audience." },
+  { n: "02", t: "Define", d: "We build the strategy and direction." },
+  { n: "03", t: "Create", d: "We turn strategy into creative ideas." },
+  { n: "04", t: "Execute", d: "We bring ideas to life." },
+  { n: "05", t: "Optimize", d: "We analyze, learn and improve." },
+];
+
 export default function WhatWeDoPage() {
   return (
-    <PageTransition>
-      <section
-        className={cn("section min-h-screen pt-32 bg-[var(--creoit-black)]")}
-        aria-labelledby="services-page-heading"
-      >
-        <div className="container">
-          <p className="section-label">Services</p>
-          <AnimatedText
-            text="HOW CAN WE HELP?"
-            as="h1"
-            id="services-page-heading"
-            splitBy="word"
-            delay={0.1}
-            stagger={0.08}
-            className="font-display font-bold text-[var(--creoit-off-white)] mb-16 max-w-3xl"
-          />
+    <PageMotion>
+      <PageHero
+        index="02"
+        label="What we do"
+        ring="Six lenses one team"
+        title={
+          <>
+            How can we <span className="serif-i text-lilac">help?</span>
+          </>
+        }
+        lead="One team, multiple powers. Six disciplines that work as a single lens — pick one, or bring them all."
+      />
 
-          {/* Services Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--border)]">
-            {services.map((service) => (
-              <div
-                key={service.id}
-                className="bg-[var(--creoit-black)] p-8 md:p-10 hover:bg-[var(--creoit-dark)] transition-colors duration-300"
-              >
-                <span className="font-display text-xs text-[var(--creoit-accent)] tracking-widest mb-4 block">
-                  {service.number}
-                </span>
-                <h2 className="font-display font-bold text-2xl md:text-3xl text-[var(--creoit-off-white)] mb-3">
-                  {service.title}
-                </h2>
-                <p className="font-body text-sm text-[var(--creoit-grey-light)] leading-relaxed mb-6">
-                  {service.description}
-                </p>
-                <ul className="flex flex-col gap-2">
-                  {service.offerings.map((offering) => (
-                    <li
-                      key={offering}
-                      className="font-body text-xs text-[var(--creoit-grey-mid)] flex items-center gap-2"
-                    >
-                      <span className="w-1 h-1 rounded-full bg-[var(--creoit-accent)] flex-shrink-0" />
-                      {offering}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
+      <section data-nav="light" className="relative bg-paper px-[var(--pad)] py-[clamp(4rem,9vw,8rem)] text-ink">
+        <p className="mono mb-8 flex items-center justify-between text-ink/55" data-reveal>
+          <span>Six services</span>
+          <span className="hidden sm:block">Hover to open</span>
+        </p>
+        <ServicesList />
       </section>
-    </PageTransition>
+
+      <section data-nav="dark" className="relative bg-deep px-[var(--pad)] py-[clamp(4rem,9vw,8rem)] text-paper">
+        <p className="mono mb-8 text-paper/55" data-reveal>
+          How we work
+        </p>
+        <h2 data-lines className="display max-w-[14ch] text-[clamp(2.4rem,6.6vw,7rem)] leading-[0.96]">
+          From idea to <span className="serif-i text-lilac">impact.</span>
+        </h2>
+        <ol className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-paper/15 bg-paper/15 sm:grid-cols-2 lg:grid-cols-5">
+          {STEPS.map((s) => (
+            <li key={s.n} data-reveal className="bg-deep p-6 transition-colors duration-500 hover:bg-signal md:p-8">
+              <p className="mono mb-10 text-lilac">{s.n}</p>
+              <p className="display text-[clamp(1.7rem,2.4vw,2.6rem)]">{s.t}</p>
+              <p className="mt-3 text-[0.92rem] leading-relaxed text-paper/70">{s.d}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </PageMotion>
   );
 }

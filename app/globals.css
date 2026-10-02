@@ -280,3 +280,25 @@ html.menu-open {
     animation: none;
   }
 }
+
+/* ---------- Mandala frame rings ---------- */
+@keyframes wk-spin {
+  to { transform: rotate(360deg); }
+}
+.wk-ring {
+  transform-origin: 0 0;
+  transform-box: view-box;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wk-ring { animation: none !important; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(28px); }
+}
+.rise {
+  animation: rise 0.8s var(--ease) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise { animation: none; }
+}
