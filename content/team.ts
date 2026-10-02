@@ -13,6 +13,7 @@ export const team: TeamMember[] = [
     bio: "Brings strategy and creativity together to build brands that stand out.",
     photo: "/images/team/placeholder-1.jpg",
     quote: "Great work starts with the right question.",
+    craft: ["Brand Strategy","Positioning","Marketing Strategy"],
   },
   {
     id: "team-placeholder-2",
@@ -21,6 +22,7 @@ export const team: TeamMember[] = [
     bio: "Creates content that earns attention and keeps it.",
     photo: "/images/team/placeholder-2.jpg",
     quote: "Stop the scroll. Tell the story.",
+    craft: ["Photography","Videography","Reels & Films","Creative Campaigns"],
   },
   {
     id: "team-placeholder-3",
@@ -29,6 +31,7 @@ export const team: TeamMember[] = [
     bio: "Translates strategy into visual identities that feel unmistakably right.",
     photo: "/images/team/placeholder-3.jpg",
     quote: "Design is the silent ambassador of your brand.",
+    craft: ["Brand Identity","Visual Identity"],
   },
   {
     id: "team-placeholder-4",
@@ -37,5 +40,6 @@ export const team: TeamMember[] = [
     bio: "Turns ad budgets into measurable business results.",
     photo: "/images/team/placeholder-4.jpg",
     quote: "Creativity is the weapon. Data is the aim.",
+    craft: ["Meta Ads","Google Ads","Lead Generation"],
   },
 ];

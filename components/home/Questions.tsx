@@ -161,7 +161,7 @@ export function Questions() {
         className="relative px-[var(--pad)] pb-[clamp(4rem,8vw,7rem)] pt-[clamp(5rem,9vw,8rem)] md:flex md:h-[100svh] md:min-h-[680px] md:flex-col md:justify-center md:py-24"
       >
         <div className="mono flex items-center justify-between text-paper/55 md:absolute md:inset-x-[var(--pad)] md:top-24">
-          <span>[ 06 ] Our thinking</span>
+          <span>[ 07 ] Our thinking</span>
           <span>
             Q <span className="text-lilac">0{Math.max(open, 0) + 1}</span> / 0{QA.length}
           </span>
@@ -254,7 +254,7 @@ export function Questions() {
       {/* Process */}
       <div className="px-[var(--pad)] pb-[clamp(5rem,10vw,9rem)] pt-[clamp(3rem,6vw,6rem)]">
         <div className="mono mb-8 flex items-center justify-between text-paper/55">
-          <span>[ 07 ] Process</span>
+          <span>[ 08 ] Process</span>
           <span className="hidden sm:block">Five moves</span>
         </div>
         <h3 className="display max-w-[14ch] text-[clamp(2.2rem,5.6vw,6rem)] leading-[0.96]">

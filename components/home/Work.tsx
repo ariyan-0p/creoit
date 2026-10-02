@@ -80,7 +80,7 @@ export function Work() {
     >
       <div className="px-[var(--pad)]">
         <div className="mono mb-10 flex items-center justify-between text-ink/55">
-          <span>[ 03 ] Selected work</span>
+          <span>[ 04 ] Selected work</span>
           <Link href="/work" className="u-link">All work →</Link>
         </div>
         <h2 id="work-title" className="display max-w-[16ch] text-[clamp(2.4rem,7.4vw,8.4rem)] leading-[0.98]">

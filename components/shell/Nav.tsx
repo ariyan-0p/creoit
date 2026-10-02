@@ -192,7 +192,7 @@ export function Nav() {
               >
                 <Link href={l.href} onClick={() => setOpen(false)} className="menu-link flex items-baseline gap-5 overflow-hidden py-[0.6vh]" data-cursor="Go">
                   <span className="mono w-8 text-lilac">0{i + 1}</span>
-                  <span className="menu-label display block text-[clamp(2.4rem,8.2vh,6.5rem)]">{l.label}</span>
+                  <span className="menu-label display block text-[clamp(2.2rem,7vh,6rem)]">{l.label}</span>
                 </Link>
               </li>
             ))}

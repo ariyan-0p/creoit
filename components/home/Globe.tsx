@@ -68,7 +68,7 @@ export function Globe() {
       />
 
       <div className="relative z-10 flex items-start justify-between">
-        <p className="mono gl-in text-paper/55">[ 04 ] Where we are</p>
+        <p className="mono gl-in text-paper/55">[ 05 ] Where we are</p>
         <p className="mono gl-in hidden text-right text-paper/55 sm:block">
           Local time <span className="text-paper"><Clock seconds /></span>
           <br />

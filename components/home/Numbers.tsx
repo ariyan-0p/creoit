@@ -51,7 +51,7 @@ export function Numbers() {
       className="relative z-10 overflow-hidden bg-signal px-[var(--pad)] py-[clamp(5rem,10vw,9rem)] text-paper"
     >
       <div className="mono mb-10 flex items-center justify-between">
-        <span>[ 05 ] Impact</span>
+        <span>[ 06 ] Impact</span>
         <span className="hidden sm:block">Measured, not guessed</span>
       </div>
 

@@ -55,6 +55,8 @@ export interface TeamMember {
   photo: string;
   funFact?: string;
   quote?: string;
+  /** What this person does, in the words of our services (shown as chips). */
+  craft?: string[];
   socials?: {
     instagram?: string;
     linkedin?: string;
