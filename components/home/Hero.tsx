@@ -163,7 +163,6 @@ export function Hero() {
               "radial-gradient(120% 90% at 30% 55%, rgba(10,10,11,0) 0%, rgba(10,10,11,0.55) 70%, rgba(10,10,11,0.92) 100%)",
           }}
         />
-        <div className="grain absolute inset-0 overflow-hidden" aria-hidden />
 
         {/* viewfinder frame */}
         <div className="hero-vf pointer-events-none absolute inset-x-[var(--pad)] bottom-[var(--pad)] top-[var(--vf-top)] text-paper/55" aria-hidden>

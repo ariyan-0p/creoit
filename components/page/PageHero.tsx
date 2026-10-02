@@ -33,7 +33,6 @@ export function PageHero({
             "radial-gradient(55% 60% at 82% 38%, rgba(106,61,255,0.5) 0%, rgba(106,61,255,0) 70%), radial-gradient(50% 50% at 8% 0%, rgba(20,0,33,0.95) 0%, rgba(20,0,33,0) 100%)",
         }}
       />
-      <div className="grain absolute inset-0 overflow-hidden" aria-hidden />
 
       <LensRing
         text={ring}

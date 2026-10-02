@@ -9,7 +9,6 @@ export default function NotFound() {
         className="absolute inset-0"
         style={{ background: "radial-gradient(55% 60% at 70% 40%, rgba(106,61,255,0.45) 0%, rgba(106,61,255,0) 70%)" }}
       />
-      <div className="grain absolute inset-0 overflow-hidden" aria-hidden />
       <div className="relative z-10">
         <p className="mono mb-8 flex items-center gap-3 text-paper/70">
           <i className="rec" /> Error 404

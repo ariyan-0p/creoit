@@ -66,7 +66,6 @@ export function Globe() {
         className="absolute inset-0"
         style={{ background: "radial-gradient(50% 60% at 62% 55%, rgba(106,61,255,0.28) 0%, rgba(106,61,255,0) 70%)" }}
       />
-      <div className="grain absolute inset-0 overflow-hidden" aria-hidden />
 
       <div className="relative z-10 flex items-start justify-between">
         <p className="mono gl-in text-paper/55">[ 04 ] Where we are</p>
