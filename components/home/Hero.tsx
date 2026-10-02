@@ -199,8 +199,9 @@ export function Hero() {
             >
               <Lines />
             </span>
-            <span className="mask-line col-start-1 row-start-2 block pb-[0.08em]">
-              <span className="hero-rem serif-i block text-lilac normal-case tracking-[-0.03em] leading-[0.95]">
+            {/* tucked tight under "what people", a touch larger (the serif has a smaller x-height): reads as ONE sentence */}
+            <span className="mask-line col-start-1 row-start-2 -mt-[0.14em] block pb-[0.1em]">
+              <span className="hero-rem serif-i block text-[1.12em] text-lilac normal-case tracking-[-0.03em] leading-[0.82]">
                 remember.
               </span>
             </span>
