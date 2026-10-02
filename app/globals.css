@@ -301,3 +301,16 @@ html.menu-open {
 @media (prefers-reduced-motion: reduce) {
   .rise { animation: none; }
 }
+
+/* ---------- Footer talk badge ---------- */
+@keyframes tb-spin {
+  to { transform: rotate(360deg); }
+}
+.tb-spin {
+  transform-origin: 0 0;
+  transform-box: view-box;
+  animation: tb-spin 24s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-spin { animation: none; }
+}
