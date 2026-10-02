@@ -2,15 +2,20 @@
 
 /**
  * Questions — "Everything starts with a question."
+ *
  * A real Q&A: five questions we ask before we make anything, each with its
- * answer. One is open at a time (click or Enter/Space). Answers are drawn from
- * our own service and process copy. Below it, the five-step process draws itself.
+ * answer. On desktop the section pins and scroll walks through the questions —
+ * each one comes into focus (the others go soft, like the hero lens) and its
+ * answer rises in line by line. Click any question to jump to it. On phones
+ * (and with reduced motion) it's a plain tap-to-open accordion.
+ * Answers are drawn from our own service and process copy.
  */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
+import { useLenis } from "@/providers/SmoothScrollProvider";
 
 const QA = [
   {
@@ -50,11 +55,44 @@ const STEPS = [
 
 export function Questions() {
   const root = useRef<HTMLElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLSpanElement>(null);
+  const stRef = useRef<ScrollTrigger | null>(null);
   const [open, setOpen] = useState(0);
+  const lenis = useLenis();
 
+  // Pin + scroll-driven Q&A (desktop, motion allowed) and the other scroll reveals.
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
+
+      mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
+        const section = root.current!;
+        section.dataset.pinned = "1";
+        let last = 0;
+        const st = ScrollTrigger.create({
+          trigger: pinRef.current,
+          start: "top top",
+          end: () => `+=${window.innerHeight * 0.62 * QA.length}`,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (barRef.current) barRef.current.style.transform = `scaleX(${self.progress.toFixed(3)})`;
+            const idx = Math.min(QA.length - 1, Math.floor(self.progress * QA.length));
+            if (idx !== last) {
+              last = idx;
+              setOpen(idx);
+            }
+          },
+        });
+        stRef.current = st;
+        return () => {
+          delete section.dataset.pinned;
+          stRef.current = null;
+        };
+      });
+
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         gsap.from(".qa-item", {
           y: 44,
@@ -62,7 +100,7 @@ export function Questions() {
           duration: 1,
           stagger: 0.09,
           ease: "expo.out",
-          scrollTrigger: { trigger: ".qa-list", start: "top 82%" },
+          scrollTrigger: { trigger: ".qa-list", start: "top 85%" },
         });
         gsap.from(".pr-line", {
           scaleX: 0,
@@ -83,25 +121,71 @@ export function Questions() {
     { scope: root }
   );
 
+  // Each time a question opens, its answer rises in line by line.
+  useEffect(() => {
+    if (open < 0 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const p = root.current?.querySelector<HTMLElement>(`#qa-a-${open} .qa-text`);
+    if (!p) return;
+    const split = SplitText.create(p, { type: "lines", mask: "lines", linesClass: "qa-line" });
+    const tween = gsap.from(split.lines, {
+      yPercent: 110,
+      duration: 0.9,
+      stagger: 0.08,
+      delay: 0.12,
+      ease: "expo.out",
+      onComplete: () => split.revert(),
+    });
+    return () => {
+      tween.kill();
+      split.revert();
+    };
+  }, [open]);
+
+  const choose = (i: number) => {
+    const st = stRef.current;
+    if (root.current?.dataset.pinned === "1" && st) {
+      // pinned: scroll to that question's slice of the pin so scroll and state stay in sync
+      const y = st.start + ((i + 0.5) / QA.length) * (st.end - st.start);
+      if (lenis) lenis.scrollTo(y, { duration: 1.3 });
+      else window.scrollTo({ top: y, behavior: "smooth" });
+      setOpen(i);
+    } else {
+      setOpen((cur) => (cur === i ? -1 : i));
+    }
+  };
+
   return (
-    <section ref={root} data-nav="dark" aria-labelledby="q-title" className="relative z-10 bg-ink text-paper">
-      <div className="px-[var(--pad)] pb-[clamp(4rem,8vw,7rem)] pt-[clamp(5rem,9vw,8rem)]">
-        <div className="mono flex items-center justify-between text-paper/55">
+    <section ref={root} data-nav="dark" aria-labelledby="q-title" className="group relative z-10 bg-ink text-paper">
+      <div
+        ref={pinRef}
+        className="relative px-[var(--pad)] pb-[clamp(4rem,8vw,7rem)] pt-[clamp(5rem,9vw,8rem)] md:flex md:h-[100svh] md:min-h-[680px] md:flex-col md:justify-center md:py-24"
+      >
+        <div className="mono flex items-center justify-between text-paper/55 md:absolute md:inset-x-[var(--pad)] md:top-24">
           <span>[ 06 ] Our thinking</span>
           <span>
-            Q <span className="text-lilac">0{open + 1}</span> / 0{QA.length}
+            Q <span className="text-lilac">0{Math.max(open, 0) + 1}</span> / 0{QA.length}
           </span>
         </div>
 
-        <div className="mt-10 grid gap-12 md:grid-cols-12 md:gap-8">
-          {/* heading stays in view while you read */}
-          <div className="md:col-span-5 md:self-start md:sticky md:top-28">
-            <h2 id="q-title" className="display max-w-[11ch] text-[clamp(2.4rem,6vw,6.4rem)] leading-[0.96]">
+        <div className="mt-10 grid gap-12 md:mt-0 md:grid-cols-12 md:gap-8">
+          {/* heading + big counter */}
+          <div className="relative md:col-span-5 md:self-center">
+            <h2 id="q-title" className="display max-w-[11ch] text-[clamp(2.4rem,5.4vw,5.8rem)] leading-[0.96]">
               Everything starts with a <span className="serif-i text-[1.08em] text-lilac">question.</span>
             </h2>
             <p className="mt-6 max-w-xs text-[0.95rem] leading-relaxed text-paper/60">
               Five questions we ask before we make anything. Here&apos;s how we answer them.
             </p>
+
+            <div className="mt-8 hidden items-end gap-4 md:flex" aria-hidden>
+              <span key={open} className="rise display text-[clamp(4.5rem,9vw,9.5rem)] leading-[0.8] text-lilac/30">
+                0{Math.max(open, 0) + 1}
+              </span>
+              <span className="mono mb-2 text-paper/40">/ 0{QA.length}</span>
+            </div>
+            <span className="relative mt-6 hidden h-px w-full max-w-xs bg-paper/15 md:block" aria-hidden>
+              <span ref={barRef} className="absolute inset-0 origin-left scale-x-0 bg-lilac" />
+            </span>
           </div>
 
           {/* Q&A */}
@@ -115,16 +199,18 @@ export function Questions() {
                     aria-expanded={isOpen}
                     aria-controls={`qa-a-${i}`}
                     id={`qa-q-${i}`}
-                    onClick={() => setOpen(isOpen ? -1 : i)}
+                    onClick={() => choose(i)}
                     data-cursor={isOpen ? undefined : "Open"}
-                    className="group grid w-full grid-cols-[2.4rem_1fr_auto] items-start gap-x-3 py-6 text-left md:grid-cols-[3.2rem_1fr_auto] md:py-7"
+                    className="group/q grid w-full grid-cols-[2.4rem_1fr_auto] items-start gap-x-3 py-5 text-left md:grid-cols-[3.2rem_1fr_auto] md:py-4"
                   >
-                    <span className={`mono pt-[0.7em] transition-colors duration-500 ${isOpen ? "text-lilac" : "text-paper/40 group-hover:text-paper/70"}`}>
+                    <span className={`mono pt-[0.7em] transition-colors duration-500 ${isOpen ? "text-lilac" : "text-paper/40 group-hover/q:text-paper/70"}`}>
                       Q{String(i + 1).padStart(2, "0")}
                     </span>
                     <span
-                      className={`serif-i text-[clamp(1.5rem,2.7vw,2.7rem)] leading-[1.08] transition-colors duration-500 ${
-                        isOpen ? "text-paper" : "text-paper/55 group-hover:text-paper/85"
+                      className={`serif-i text-[clamp(1.45rem,2.4vw,2.5rem)] leading-[1.08] transition-[color,filter,transform] duration-[600ms] ease-[var(--ease)] ${
+                        isOpen
+                          ? "translate-x-0 text-paper"
+                          : "text-paper/55 group-hover/q:text-paper/90 group-data-[pinned=1]:blur-[2.4px] group-data-[pinned=1]:group-hover/q:blur-0"
                       }`}
                     >
                       {item.q}
@@ -147,11 +233,11 @@ export function Questions() {
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <div className="grid grid-cols-[2.4rem_1fr] gap-x-3 pb-8 md:grid-cols-[3.2rem_1fr]">
+                      <div className="grid grid-cols-[2.4rem_1fr] gap-x-3 pb-6 md:grid-cols-[3.2rem_1fr]">
                         <span className="mono pt-1 text-lilac">A</span>
                         <div>
-                          <p className="max-w-[46ch] text-[1.02rem] leading-relaxed text-paper/75 md:text-[1.1rem]">{item.a}</p>
-                          <Link href="/what-we-do" data-cursor="Go" className="mono u-link mt-5 inline-block text-paper">
+                          <p className="qa-text max-w-[46ch] text-[1.02rem] leading-relaxed text-paper/75 md:text-[1.08rem]">{item.a}</p>
+                          <Link href="/what-we-do" data-cursor="Go" className="mono u-link mt-4 inline-block text-paper">
                             {item.cta} →
                           </Link>
                         </div>
