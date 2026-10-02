@@ -2,22 +2,43 @@
 
 /**
  * Questions — "Everything starts with a question."
- * Pinned. Scroll slides a column of questions past a fixed focal line;
- * the nearest one is sharp, the rest drop into soft focus. Then the
- * five-step process draws itself.
+ * A real Q&A: five questions we ask before we make anything, each with its
+ * answer. One is open at a time (click or Enter/Space). Answers are drawn from
+ * our own service and process copy. Below it, the five-step process draws itself.
  */
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 
-const QUESTIONS = [
-  "Why should anyone care about this brand?",
-  "What makes this brand different?",
-  "Who are we talking to?",
-  "What will make people stop scrolling?",
-  "How do we turn attention into business?",
-];
+const QA = [
+  {
+    q: "Why should anyone care about this brand?",
+    a: "Attention is easy to buy. Trust is difficult to earn. Relevance is even harder. So we start by finding the reason people should care — then we build everything else around it.",
+    cta: "Explore branding",
+  },
+  {
+    q: "What makes this brand different?",
+    a: "Your brand is more than a logo. It's what people feel when they hear your name. We define the positioning and the identity that only you can own, so you're never mistaken for anyone else.",
+    cta: "See our branding work",
+  },
+  {
+    q: "Who are we talking to?",
+    a: "Before any idea, we understand the business, the market and the audience: who they are, what they scroll past, and what actually moves them.",
+    cta: "See how we work",
+  },
+  {
+    q: "What will make people stop scrolling?",
+    a: "Attention is won in the first three seconds. We create photography, films, reels and campaigns that earn that attention, and keep it.",
+    cta: "Explore content",
+  },
+  {
+    q: "How do we turn attention into business?",
+    a: "Creativity without results is just art. We pair creative thinking with data-driven performance marketing and a website built to convert visitors into customers, then measure, learn and improve.",
+    cta: "Explore performance",
+  },
+] as const;
 
 const STEPS = [
   { n: "01", t: "Understand", d: "We understand the business, market and audience." },
@@ -29,43 +50,20 @@ const STEPS = [
 
 export function Questions() {
   const root = useRef<HTMLElement>(null);
-  const pinRef = useRef<HTMLDivElement>(null);
-  const counter = useRef<HTMLSpanElement>(null);
+  const [open, setOpen] = useState(0);
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const items = gsap.utils.toArray<HTMLElement>(".q-item");
-        const list = root.current!.querySelector<HTMLElement>(".q-list")!;
-        const n = items.length;
-
-        const apply = (p: number) => {
-          const idx = p * (n - 1);
-          const step = items[1].offsetTop - items[0].offsetTop;
-          list.style.transform = `translate3d(0, ${-(idx * step)}px, 0)`;
-          items.forEach((el, i) => {
-            const d = Math.abs(i - idx);
-            el.style.opacity = String(Math.max(0.1, 1 - d * 0.75));
-            el.style.filter = d < 0.05 ? "none" : `blur(${Math.min(d * 5, 11).toFixed(1)}px)`;
-          });
-          if (counter.current) counter.current.textContent = `0${Math.round(idx) + 1}`;
-        };
-        apply(0);
-
-        gsap.timeline({
-          scrollTrigger: {
-            trigger: pinRef.current,
-            start: "top top",
-            end: () => `+=${window.innerHeight * 2.4}`,
-            pin: true,
-            scrub: true,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => apply(self.progress),
-            onRefresh: (self) => apply(self.progress),
-          },
+        gsap.from(".qa-item", {
+          y: 44,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.09,
+          ease: "expo.out",
+          scrollTrigger: { trigger: ".qa-list", start: "top 82%" },
         });
-
         gsap.from(".pr-line", {
           scaleX: 0,
           transformOrigin: "left center",
@@ -87,34 +85,88 @@ export function Questions() {
 
   return (
     <section ref={root} data-nav="dark" aria-labelledby="q-title" className="relative z-10 bg-ink text-paper">
-      <div ref={pinRef} className="relative flex h-[100svh] min-h-[620px] flex-col overflow-hidden px-[var(--pad)] pb-[var(--pad)] pt-24">
+      <div className="px-[var(--pad)] pb-[clamp(4rem,8vw,7rem)] pt-[clamp(5rem,9vw,8rem)]">
         <div className="mono flex items-center justify-between text-paper/55">
           <span>[ 06 ] Our thinking</span>
           <span>
-            Q <span ref={counter} className="text-lilac">01</span> / 05
+            Q <span className="text-lilac">0{open + 1}</span> / 0{QA.length}
           </span>
         </div>
 
-        <h2 id="q-title" className="display mt-8 max-w-[11ch] text-[clamp(2.2rem,5.6vw,6rem)] leading-[0.96]">
-          Everything starts with a <span className="serif-i text-lilac text-[1.08em]">question.</span>
-        </h2>
-
-        <div className="pointer-events-none absolute inset-x-[var(--pad)] bottom-[var(--pad)] top-[42%] md:left-[34%] md:top-24">
-          <div className="relative h-full overflow-visible">
-            <div className="absolute inset-x-0 top-[44%] h-px bg-paper/20" aria-hidden />
-            <ul className="q-list absolute inset-x-0 top-[44%] will-change-transform" style={{ transform: "translate3d(0,0,0)" }}>
-              {QUESTIONS.map((q) => (
-                <li key={q} className="q-item py-[0.35em]" style={{ willChange: "opacity, filter" }}>
-                  <p className="serif-i -translate-y-[0.55em] text-[clamp(1.9rem,4.7vw,5.4rem)] leading-[1.02]">{q}</p>
-                </li>
-              ))}
-            </ul>
+        <div className="mt-10 grid gap-12 md:grid-cols-12 md:gap-8">
+          {/* heading stays in view while you read */}
+          <div className="md:col-span-5 md:self-start md:sticky md:top-28">
+            <h2 id="q-title" className="display max-w-[11ch] text-[clamp(2.4rem,6vw,6.4rem)] leading-[0.96]">
+              Everything starts with a <span className="serif-i text-[1.08em] text-lilac">question.</span>
+            </h2>
+            <p className="mt-6 max-w-xs text-[0.95rem] leading-relaxed text-paper/60">
+              Five questions we ask before we make anything. Here&apos;s how we answer them.
+            </p>
           </div>
+
+          {/* Q&A */}
+          <ul className="qa-list md:col-span-7">
+            {QA.map((item, i) => {
+              const isOpen = open === i;
+              return (
+                <li key={item.q} className="qa-item border-t border-paper/15 last:border-b">
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-controls={`qa-a-${i}`}
+                    id={`qa-q-${i}`}
+                    onClick={() => setOpen(isOpen ? -1 : i)}
+                    data-cursor={isOpen ? undefined : "Open"}
+                    className="group grid w-full grid-cols-[2.4rem_1fr_auto] items-start gap-x-3 py-6 text-left md:grid-cols-[3.2rem_1fr_auto] md:py-7"
+                  >
+                    <span className={`mono pt-[0.7em] transition-colors duration-500 ${isOpen ? "text-lilac" : "text-paper/40 group-hover:text-paper/70"}`}>
+                      Q{String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className={`serif-i text-[clamp(1.5rem,2.7vw,2.7rem)] leading-[1.08] transition-colors duration-500 ${
+                        isOpen ? "text-paper" : "text-paper/55 group-hover:text-paper/85"
+                      }`}
+                    >
+                      {item.q}
+                    </span>
+                    <span
+                      aria-hidden
+                      className={`relative mt-[0.6em] block h-5 w-5 shrink-0 transition-transform duration-500 ease-[var(--ease)] ${isOpen ? "rotate-45" : ""}`}
+                    >
+                      <span className={`absolute left-0 top-1/2 h-px w-full -translate-y-1/2 transition-colors duration-500 ${isOpen ? "bg-lilac" : "bg-paper/60"}`} />
+                      <span className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 transition-colors duration-500 ${isOpen ? "bg-lilac" : "bg-paper/60"}`} />
+                    </span>
+                  </button>
+
+                  <div
+                    id={`qa-a-${i}`}
+                    role="region"
+                    aria-labelledby={`qa-q-${i}`}
+                    className={`grid transition-[grid-template-rows,opacity] duration-[800ms] ease-[var(--ease)] ${
+                      isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="grid grid-cols-[2.4rem_1fr] gap-x-3 pb-8 md:grid-cols-[3.2rem_1fr]">
+                        <span className="mono pt-1 text-lilac">A</span>
+                        <div>
+                          <p className="max-w-[46ch] text-[1.02rem] leading-relaxed text-paper/75 md:text-[1.1rem]">{item.a}</p>
+                          <Link href="/what-we-do" data-cursor="Go" className="mono u-link mt-5 inline-block text-paper">
+                            {item.cta} →
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
 
       {/* Process */}
-      <div className="px-[var(--pad)] pb-[clamp(5rem,10vw,9rem)] pt-[clamp(4rem,8vw,8rem)]">
+      <div className="px-[var(--pad)] pb-[clamp(5rem,10vw,9rem)] pt-[clamp(3rem,6vw,6rem)]">
         <div className="mono mb-8 flex items-center justify-between text-paper/55">
           <span>[ 07 ] Process</span>
           <span className="hidden sm:block">Five moves</span>
