@@ -89,7 +89,7 @@ export function Questions() {
     <section ref={root} data-nav="dark" aria-labelledby="q-title" className="relative z-10 bg-ink text-paper">
       <div ref={pinRef} className="relative flex h-[100svh] min-h-[620px] flex-col overflow-hidden px-[var(--pad)] pb-[var(--pad)] pt-24">
         <div className="mono flex items-center justify-between text-paper/55">
-          <span>[ 05 ] Our thinking</span>
+          <span>[ 06 ] Our thinking</span>
           <span>
             Q <span ref={counter} className="text-lilac">01</span> / 05
           </span>
@@ -116,7 +116,7 @@ export function Questions() {
       {/* Process */}
       <div className="px-[var(--pad)] pb-[clamp(5rem,10vw,9rem)] pt-[clamp(4rem,8vw,8rem)]">
         <div className="mono mb-8 flex items-center justify-between text-paper/55">
-          <span>[ 06 ] Process</span>
+          <span>[ 07 ] Process</span>
           <span className="hidden sm:block">Five moves</span>
         </div>
         <h3 className="display max-w-[14ch] text-[clamp(2.2rem,5.6vw,6rem)] leading-[0.96]">
