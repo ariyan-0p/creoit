@@ -49,8 +49,9 @@ export function Team() {
         });
       });
 
-      // the deck (desktop, motion allowed)
-      mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
+      // the deck: every width, motion allowed, as long as a card can fit the screen
+      // (very short screens, e.g. a phone held sideways, fall back to a normal scroll)
+      mm.add("(min-height: 561px) and (prefers-reduced-motion: no-preference)", () => {
         const slides = gsap.utils.toArray<HTMLElement>(".tm-slide");
 
         slides.forEach((slide, i) => {
@@ -127,13 +128,27 @@ export function Team() {
           const hasName = m.name !== "Team Member";
           const last = i === MEMBERS.length - 1;
           return (
-            <div key={m.id} className="tm-slide relative md:sticky md:top-0 md:h-[100svh]" style={{ zIndex: i + 1 }}>
+            <div
+              key={m.id}
+              className="tm-slide sticky top-0 h-[100svh] [@media(max-height:560px)]:static [@media(max-height:560px)]:h-auto"
+              style={{ zIndex: i + 1 }}
+            >
               <article
                 data-nav={th.nav}
                 aria-label={`${hasName ? m.name : m.role}, ${m.role}`}
-                className={`tm-card relative flex min-h-[100svh] flex-col justify-between overflow-hidden rounded-t-[1.75rem] px-[var(--pad)] pb-[clamp(4.5rem,7vw,5.75rem)] pt-[clamp(5.5rem,8vw,7rem)] md:h-full md:min-h-0 ${th.bg} ${th.text}`}
+                className={`tm-card relative flex h-full flex-col justify-between overflow-hidden rounded-t-[1.75rem] px-[var(--pad)] pb-6 pt-[5.25rem] md:pb-[clamp(4.5rem,7vw,5.75rem)] md:pt-[clamp(5.5rem,8vw,7rem)] [@media(max-height:560px)]:h-auto [@media(max-height:560px)]:min-h-[100svh] ${th.bg} ${th.text}`}
               >
                 <div aria-hidden className="tm-dim pointer-events-none absolute inset-0 z-20 bg-ink opacity-0" />
+
+                {/* phone-only details: a big faint numeral and a dot indicator showing which of the four you're on */}
+                <span aria-hidden className="display pointer-events-none absolute right-[var(--pad)] top-[5.4rem] text-[34vw] leading-none opacity-[0.07] md:hidden">
+                  0{i + 1}
+                </span>
+                <div aria-hidden className="absolute right-3 top-1/2 flex -translate-y-1/2 flex-col gap-2 md:hidden">
+                  {MEMBERS.map((_, k) => (
+                    <i key={k} className={`block w-1.5 rounded-full bg-current ${k === i ? "h-5" : "h-1.5 opacity-30"}`} />
+                  ))}
+                </div>
 
                 <div className={`mono tm-k flex items-center justify-between ${th.sub}`}>
                   <span>{hasName ? m.role : `Team member 0${i + 1}`}</span>
@@ -142,25 +157,34 @@ export function Team() {
                   </span>
                 </div>
 
-                <div className="grid items-end gap-8 md:grid-cols-12 md:gap-10">
+                <div className="grid items-end gap-4 md:grid-cols-12 md:gap-10">
                   <div className="md:col-span-7">
-                    <h3 className="tm-k display max-w-[12ch] text-[clamp(2.6rem,6.4vw,7rem)] leading-[0.95]">{hasName ? m.name : m.role}</h3>
+                    <h3 className="tm-k display max-w-[12ch] text-[clamp(2rem,9.4vw,3.2rem)] leading-[0.95] md:text-[clamp(2.6rem,6.4vw,7rem)]">
+                      {hasName ? m.name : m.role}
+                    </h3>
                     {m.quote && (
-                      <p className={`tm-k serif-i mt-5 max-w-[26ch] text-[clamp(1.4rem,2.6vw,2.5rem)] leading-[1.1] ${th.accent}`}>&ldquo;{m.quote}&rdquo;</p>
+                      <p className={`tm-k serif-i mt-3 max-w-[26ch] text-[1.2rem] leading-[1.1] md:mt-5 md:text-[clamp(1.4rem,2.6vw,2.5rem)] ${th.accent}`}>
+                        &ldquo;{m.quote}&rdquo;
+                      </p>
                     )}
-                    <p className={`tm-k mt-5 max-w-md text-[0.95rem] leading-relaxed md:text-[1rem] ${th.sub}`}>{m.bio}</p>
+                    {/* on short phones the bio steps aside so the card still fits one screen */}
+                    <p
+                      className={`tm-k mt-3 line-clamp-2 max-w-md text-[0.88rem] leading-relaxed max-md:[@media(max-height:700px)]:hidden md:mt-5 md:line-clamp-none md:text-[1rem] ${th.sub}`}
+                    >
+                      {m.bio}
+                    </p>
 
                     {m.craft && (
-                      <ul className="mono mt-5 flex max-w-xl flex-wrap gap-2">
+                      <ul className="mono mt-3 flex max-w-xl flex-wrap gap-1.5 md:mt-5 md:gap-2">
                         {m.craft.map((c) => (
-                          <li key={c} className={`tm-k rounded-full border px-3 py-1.5 ${th.chip}`}>
+                          <li key={c} className={`tm-k rounded-full border px-3 py-1 md:py-1.5 ${th.chip}`}>
                             {c}
                           </li>
                         ))}
                       </ul>
                     )}
 
-                    <div className="tm-k mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <div className="tm-k mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 md:mt-7">
                       {last ? (
                         <Pill href="/team" tone={th.pill} cursor="Meet">
                           See our whole team
@@ -173,11 +197,12 @@ export function Team() {
                     </div>
                   </div>
 
-                  <div className="md:col-span-5">
+                  {/* portrait first on phones, beside the text on larger screens */}
+                  <div className="order-first md:order-none md:col-span-5">
                     <Portrait
                       photo={m.photo}
                       label={hasName ? m.name : m.role}
-                      className={`tm-frame mx-auto aspect-[4/5] w-[min(78vw,26rem)] rounded-[1.75rem] md:ml-auto md:mr-0 md:w-[min(30vw,23rem)] md:max-h-[62svh] ${th.frame}`}
+                      className={`tm-frame mx-auto aspect-[4/5] h-[min(36svh,70vw)] w-auto rounded-[1.5rem] md:ml-auto md:mr-0 md:h-auto md:w-[min(30vw,23rem)] md:max-h-[62svh] md:rounded-[1.75rem] ${th.frame}`}
                     />
                   </div>
                 </div>
