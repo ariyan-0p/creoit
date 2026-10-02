@@ -3,7 +3,7 @@
 /**
  * Preloader — a camera "arming" before the shot.
  * Counter 000→100, word flips from FORGETTABLE to UNFORGETTABLE, then the
- * curtain lifts. Plays once per session; skipped instantly on return visits.
+ * curtain lifts. Plays on every full page load (client-side navigation keeps the shell mounted, so it does not replay).
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -23,13 +23,6 @@ export function Preloader() {
     const el = root.current;
     if (!el) return;
 
-    const skip = document.documentElement.classList.contains("pl-done");
-    if (skip) {
-      // CSS (.pl-done) already hides it; just release the intro.
-      markReady();
-      return;
-    }
-
     document.documentElement.style.overflow = "hidden";
     lenis?.stop();
 
@@ -38,9 +31,6 @@ export function Preloader() {
     const tl = gsap.timeline({
       defaults: { ease: "power3.out" },
       onComplete: () => {
-        try {
-          sessionStorage.setItem("creoit-pl", "1");
-        } catch {}
         document.documentElement.style.overflow = "";
         lenis?.start();
         setGone(true);

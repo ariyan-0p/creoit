@@ -14,13 +14,7 @@ import { ScrollHud } from "./ScrollHud";
 export function Shell({ children }: { children: ReactNode }) {
   return (
     <div style={{ ["--footer-h" as string]: "max(100svh, 40rem)" }}>
-      <script
-        // Skip the preloader on repeat visits in the same session (set before first paint).
-        dangerouslySetInnerHTML={{
-          __html: `try{if(sessionStorage.getItem("creoit-pl"))document.documentElement.classList.add("pl-done")}catch(e){}`,
-        }}
-      />
-      <style>{`.pl-done #preloader{display:none!important}@keyframes pl-failsafe{to{visibility:hidden}}#preloader{animation:pl-failsafe 0s 9s forwards}`}</style>
+      <style>{`@keyframes pl-failsafe{to{visibility:hidden}}#preloader{animation:pl-failsafe 0s 9s forwards}`}</style>
       <Preloader />
       <Cursor />
       <Nav />
