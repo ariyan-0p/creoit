@@ -1,9 +1,12 @@
 "use client";
 
 /**
- * Preloader — "creoit." rises on white; the dot of the i is a ticker that
- * flips through our social icons, then settles into a purple dot. A purple
- * curtain and the white sheet then lift away in sequence.
+ * Preloader — "creoit." rises on white; the dot of the i is a ticker that flips
+ * through our social icons, then settles into a purple dot.
+ *
+ * Exit: that dot is the lens. Purple floods out of it and swallows the page,
+ * then an iris opens from the same point and reveals the site underneath
+ * (the hero camera pushes in, the headline rises, the nav drops).
  *
  * Plays on every full page load (client-side navigation keeps the shell
  * mounted, so it doesn't replay). Reduced motion: a quick fade instead.
@@ -33,6 +36,7 @@ const WORD: { ch: string; cls: string }[] = [
 ];
 
 export function Preloader() {
+  const root = useRef<HTMLDivElement>(null);
   const sheet = useRef<HTMLDivElement>(null);
   const curtain = useRef<HTMLDivElement>(null);
   const num = useRef<HTMLSpanElement>(null);
@@ -57,7 +61,7 @@ export function Preloader() {
 
     if (reduce) {
       markReady();
-      const t = gsap.to([el, curtain.current], { opacity: 0, duration: 0.5, delay: 0.3, onComplete: finish });
+      const t = gsap.to(root.current, { opacity: 0, duration: 0.5, delay: 0.3, onComplete: finish });
       return () => {
         t.kill();
         document.documentElement.style.overflow = "";
@@ -71,6 +75,11 @@ export function Preloader() {
       gsap.set(icons[0], { yPercent: 0 });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" }, onComplete: finish });
+      if (process.env.NODE_ENV !== "production" && new URLSearchParams(window.location.search).has("plseek")) {
+        // dev-only: ?plseek pauses the timeline so the transition can be stepped through
+        tl.pause();
+        (window as unknown as { __plTl?: gsap.core.Timeline }).__plTl = tl;
+      }
 
       // chrome
       tl.fromTo(".pl-chrome", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.06 }, 0.1);
@@ -83,19 +92,19 @@ export function Preloader() {
         counter,
         {
           v: 100,
-          duration: 3.1,
+          duration: 3.0,
           ease: "power2.inOut",
           onUpdate: () => {
             if (num.current) num.current.textContent = String(Math.round(counter.v)).padStart(3, "0");
           },
         },
         0.2
-      ).to(bar.current, { scaleX: 1, duration: 3.1, ease: "power2.inOut" }, 0.2);
+      ).to(bar.current, { scaleX: 1, duration: 3.0, ease: "power2.inOut" }, 0.2);
 
       // ticker tile pops in as the i's dot, flips fast through the icons
       tl.fromTo(tile.current, { scale: 0, opacity: 0, yPercent: -25 }, { scale: 1, opacity: 1, yPercent: -25, duration: 0.6, ease: "back.out(2)" }, 1.15);
       const FLIP = 0.2;
-      const flips = 9;
+      const flips = 7;
       for (let k = 0; k < flips; k++) {
         const cur = icons[k % icons.length];
         const next = icons[(k + 1) % icons.length];
@@ -115,12 +124,63 @@ export function Preloader() {
         settle + 0.05
       );
 
-      // exit: purple curtain lifts, then the white sheet
-      const exitAt = settle + 0.95;
-      tl.to(".pl-chrome, .pl-wordwrap", { opacity: 0, duration: 0.4 }, exitAt - 0.1)
-        .add(markReady, exitAt + 0.15)
-        .to(curtain.current, { yPercent: -100, duration: 1.1, ease: "expo.inOut" }, exitAt)
-        .to(el, { yPercent: -100, duration: 1.1, ease: "expo.inOut" }, exitAt + 0.12);
+      // ── exit: the dot becomes the lens ─────────────────────────────
+      const iris = { grow: 0, hole: 0 };
+      let cx = 0;
+      let cy = 0;
+      let far = 0;
+
+      // 1) the dot breathes in
+      tl.to(tile.current, { scale: 0.8, duration: 0.24, ease: "power2.out" }, settle + 0.72)
+        // 2) purple floods out of the dot and swallows the page
+        .call(
+          () => {
+            const bb = tile.current!.getBoundingClientRect();
+            cx = bb.left + bb.width / 2;
+            cy = bb.top + bb.height / 2;
+            far = Math.hypot(Math.max(cx, window.innerWidth - cx), Math.max(cy, window.innerHeight - cy)) + 40;
+            curtain.current!.style.clipPath = `circle(0px at ${cx}px ${cy}px)`;
+          },
+          undefined,
+          settle + 0.9
+        )
+        .to(
+          iris,
+          {
+            grow: 1,
+            duration: 0.72,
+            ease: "power3.inOut",
+            onUpdate: () => {
+              curtain.current!.style.clipPath = `circle(${(iris.grow * far).toFixed(1)}px at ${cx}px ${cy}px)`;
+            },
+          },
+          settle + 0.9
+        )
+        // 3) an iris opens from the same point; the site is revealed underneath
+        .call(
+          () => {
+            markReady();
+            const r = root.current!;
+            r.style.setProperty("--cx", `${cx}px`);
+            r.style.setProperty("--cy", `${cy}px`);
+            r.style.setProperty("--r", "0px");
+            const mask = "radial-gradient(circle at var(--cx) var(--cy), transparent var(--r), #000 calc(var(--r) + 1px))";
+            r.style.setProperty("-webkit-mask-image", mask);
+            r.style.setProperty("mask-image", mask);
+          },
+          undefined,
+          settle + 1.5
+        )
+        .to(
+          iris,
+          {
+            hole: 1,
+            duration: 1.05,
+            ease: "expo.inOut",
+            onUpdate: () => root.current!.style.setProperty("--r", `${(iris.hole * far).toFixed(1)}px`),
+          },
+          settle + 1.5
+        );
     }, el);
 
     return () => {
@@ -134,7 +194,7 @@ export function Preloader() {
   if (gone) return null;
 
   return (
-    <div id="preloader" aria-hidden="true" className="fixed inset-0 z-[200]">
+    <div ref={root} id="preloader" aria-hidden="true" className="fixed inset-0 z-[200]">
       <style>{`
         .pl-ch{display:inline-block;transform:translateY(118%)}
         .pl-serif{font-family:var(--font-fraunces),Georgia,serif;font-style:italic;font-weight:600;font-optical-sizing:auto}
@@ -142,9 +202,6 @@ export function Preloader() {
         .pl-dot{color:var(--color-signal)}
         .pl-chrome{opacity:0}
       `}</style>
-
-      {/* purple curtain sits behind the white sheet and trails it on exit */}
-      <div ref={curtain} className="absolute inset-0 bg-signal" />
 
       <div ref={sheet} className="absolute inset-0 flex flex-col justify-between bg-paper px-[var(--pad)] py-[var(--pad)] text-ink">
         <div className="mono pl-chrome flex items-center justify-between">
@@ -194,6 +251,9 @@ export function Preloader() {
           </div>
         </div>
       </div>
+
+      {/* purple flood: clipped to a circle that grows out of the dot */}
+      <div ref={curtain} aria-hidden className="absolute inset-0 bg-signal" style={{ clipPath: "circle(0px at 50% 50%)" }} />
     </div>
   );
 }

@@ -63,6 +63,7 @@ export function Hero() {
     const ctx = gsap.context(() => {
       const intro = gsap.timeline({ paused: true });
       intro
+        .from(".hero-bg", { scale: 1.22, duration: 2.2, ease: "expo.out" }, 0)
         .from(".hero-line", { yPercent: 108, duration: 1.3, ease: "expo.out", stagger: 0.1 })
         .from(".hero-rem", { yPercent: 108, rotate: 3, duration: 1.4, ease: "expo.out" }, 0.25)
         .from(".hero-fade", { opacity: 0, y: 18, duration: 1, ease: "power3.out", stagger: 0.08 }, 0.5)
@@ -141,6 +142,7 @@ export function Hero() {
       className="sticky top-0 z-0 h-[100svh] min-h-[600px] w-full overflow-hidden bg-ink text-paper"
     >
       <div ref={inner} className="absolute inset-0 origin-center will-change-transform">
+        <div className="hero-bg absolute inset-0 will-change-transform">
         <div
           aria-hidden
           className="absolute inset-0"
@@ -150,6 +152,7 @@ export function Hero() {
           }}
         />
         <Bokeh className="absolute inset-0" />
+        </div>
 
         {/* vignette keeps type legible over the discs */}
         <div

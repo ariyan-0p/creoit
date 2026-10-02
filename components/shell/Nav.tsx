@@ -12,6 +12,7 @@ import { gsap } from "@/lib/gsap";
 import { NAV_LINKS, SOCIALS, EMAIL } from "@/lib/site";
 import { useLenis } from "@/providers/SmoothScrollProvider";
 import { Clock } from "./Clock";
+import { onReady } from "@/lib/ready";
 
 export function Nav() {
   const bar = useRef<HTMLElement>(null);
@@ -54,6 +55,21 @@ export function Nav() {
       t.timeScale(1.3).reverse();
     }
   }, [open, lenis]);
+
+  // Entrance: the bar drops in as the preloader iris opens.
+  useEffect(() => {
+    const el = bar.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    gsap.set(el, { opacity: 0, y: -28 });
+    const off = onReady(() => {
+      gsap.to(el, { opacity: 1, y: 0, duration: 1.2, ease: "expo.out", delay: 0.35 });
+    });
+    return () => {
+      off();
+      gsap.killTweensOf(el);
+      gsap.set(el, { clearProps: "opacity,y" });
+    };
+  }, []);
 
   // Menu state → html class (forces light-on-dark nav while the menu is open).
   useEffect(() => {
