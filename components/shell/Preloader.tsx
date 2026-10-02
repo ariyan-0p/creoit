@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * Preloader — "creoit." rises on white; the dot of the i is a ticker that flips
- * through our social icons, then settles into a purple dot.
+ * Preloader — just the wordmark. "creoit." rises letter by letter on white; the
+ * dot of the i is a round ticker that flips through our social icons, then
+ * settles into a plain round purple dot. The full stop is a matching round dot.
  *
  * Exit: that dot is the lens. Purple floods out of it and swallows the page,
  * then an iris opens from the same point and reveals the site underneath
@@ -25,6 +26,7 @@ const ICONS = [
   { src: "/images/linkedin%20(1).png", alt: "LinkedIn" },
 ];
 
+/** "ı" is a dotless i — the ticker supplies its dot. The final stop is a round CSS dot, not a glyph. */
 const WORD: { ch: string; cls: string }[] = [
   { ch: "c", cls: "pl-serif" },
   { ch: "r", cls: "pl-serif" },
@@ -32,15 +34,13 @@ const WORD: { ch: string; cls: string }[] = [
   { ch: "o", cls: "pl-serif" },
   { ch: "ı", cls: "pl-sans pl-i" },
   { ch: "t", cls: "pl-sans" },
-  { ch: ".", cls: "pl-sans pl-dot" },
+  { ch: "", cls: "pl-stop" },
 ];
 
 export function Preloader() {
   const root = useRef<HTMLDivElement>(null);
   const sheet = useRef<HTMLDivElement>(null);
   const curtain = useRef<HTMLDivElement>(null);
-  const num = useRef<HTMLSpanElement>(null);
-  const bar = useRef<HTMLDivElement>(null);
   const tile = useRef<HTMLDivElement>(null);
   const [gone, setGone] = useState(false);
   const lenis = useLenis();
@@ -68,7 +68,6 @@ export function Preloader() {
       };
     }
 
-    const counter = { v: 0 };
     const ctx = gsap.context(() => {
       const icons = gsap.utils.toArray<HTMLElement>(".pl-icon");
       gsap.set(icons, { yPercent: -100 });
@@ -81,34 +80,17 @@ export function Preloader() {
         (window as unknown as { __plTl?: gsap.core.Timeline }).__plTl = tl;
       }
 
-      // chrome
-      tl.fromTo(".pl-chrome", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.06 }, 0.1);
-
       // wordmark rises letter by letter
-      tl.to(".pl-ch", { y: 0, duration: 1.5, ease: "expo.out", stagger: 0.09 }, 0.25);
+      tl.to(".pl-ch", { y: 0, duration: 1.5, ease: "expo.out", stagger: 0.09 }, 0.15);
 
-      // progress
-      tl.to(
-        counter,
-        {
-          v: 100,
-          duration: 3.0,
-          ease: "power2.inOut",
-          onUpdate: () => {
-            if (num.current) num.current.textContent = String(Math.round(counter.v)).padStart(3, "0");
-          },
-        },
-        0.2
-      ).to(bar.current, { scaleX: 1, duration: 3.0, ease: "power2.inOut" }, 0.2);
-
-      // ticker tile pops in as the i's dot, flips fast through the icons
-      tl.fromTo(tile.current, { scale: 0, opacity: 0, yPercent: -25 }, { scale: 1, opacity: 1, yPercent: -25, duration: 0.6, ease: "back.out(2)" }, 1.15);
+      // round ticker pops in as the i's dot, flips fast through the icons
+      tl.fromTo(tile.current, { scale: 0, opacity: 0, yPercent: -25 }, { scale: 1, opacity: 1, yPercent: -25, duration: 0.6, ease: "back.out(2)" }, 0.95);
       const FLIP = 0.2;
       const flips = 7;
       for (let k = 0; k < flips; k++) {
         const cur = icons[k % icons.length];
         const next = icons[(k + 1) % icons.length];
-        const at = 1.75 + k * FLIP;
+        const at = 1.5 + k * FLIP;
         tl.to(cur, { yPercent: 100, duration: FLIP * 0.8, ease: "power2.in" }, at).fromTo(
           next,
           { yPercent: -100 },
@@ -116,11 +98,11 @@ export function Preloader() {
           at + FLIP * 0.2
         );
       }
-      const settle = 1.75 + flips * FLIP + 0.1;
-      // the last icon drops out and the tile settles into a square purple dot, like the period
+      const settle = 1.5 + flips * FLIP + 0.1;
+      // the icons fade and the ticker settles into a round purple dot, the twin of the full stop
       tl.to(icons, { opacity: 0, duration: 0.2, ease: "none" }, settle).to(
         tile.current,
-        { scale: 0.52, yPercent: 0, duration: 0.7, ease: "elastic.out(1, 0.5)" },
+        { scale: 0.53, yPercent: 0, duration: 0.7, ease: "elastic.out(1, 0.5)" },
         settle + 0.05
       );
 
@@ -199,56 +181,39 @@ export function Preloader() {
         .pl-ch{display:inline-block;transform:translateY(118%)}
         .pl-serif{font-family:var(--font-fraunces),Georgia,serif;font-style:italic;font-weight:600;font-optical-sizing:auto}
         .pl-sans{font-family:var(--font-clash),'Helvetica Neue',sans-serif;font-weight:600}
-        .pl-dot{color:var(--color-signal)}
-        .pl-chrome{opacity:0}
+        .pl-stop{width:.16em;height:.16em;margin-left:.06em;border-radius:50%;background:var(--color-signal)}
       `}</style>
 
-      <div ref={sheet} className="absolute inset-0 flex flex-col justify-between bg-paper px-[var(--pad)] py-[var(--pad)] text-ink">
-        <div className="mono pl-chrome flex items-center justify-between">
-          <span>Creoit ®</span>
-          <span className="hidden sm:block">Believe it into existence</span>
-          <span className="tabular-nums">
-            <span ref={num}>000</span>%
-          </span>
-        </div>
-
-        <div className="pl-wordwrap grid place-items-center">
-          <div className="relative flex items-baseline leading-[1] tracking-[-0.03em]" style={{ fontSize: "min(34vw, 28rem)" }}>
-            {WORD.map((w, i) => {
-              const isI = w.cls.includes("pl-i");
-              return (
-                <span key={i} className="relative inline-block">
-                  <span className="mask-line -mx-[0.04em] block px-[0.04em]">
-                    <span className={`pl-ch ${w.cls}`}>{w.ch}</span>
-                  </span>
-                  {isI && (
-                    /* the ticker: sits where the dot of the i would be */
-                    <div
-                      ref={tile}
-                      className="absolute left-1/2 top-[0.03em] aspect-square w-[0.3em] -translate-x-1/2 overflow-hidden rounded-[0.07em] bg-signal opacity-0"
-                    >
-                      {ICONS.map((ic) => (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          key={ic.alt}
-                          src={ic.src}
-                          alt=""
-                          className="pl-icon absolute inset-0 m-auto h-[58%] w-[58%] object-contain"
-                          style={{ filter: "brightness(0) invert(1)" }}
-                        />
-                      ))}
-                    </div>
-                  )}
+      <div ref={sheet} className="absolute inset-0 grid place-items-center bg-paper px-[var(--pad)] text-ink">
+        <div className="relative flex items-baseline leading-[1] tracking-[-0.03em]" style={{ fontSize: "min(34vw, 28rem)" }}>
+          {WORD.map((w, i) => {
+            const isI = w.cls.includes("pl-i");
+            return (
+              <span key={i} className="relative inline-block">
+                <span className="mask-line -mx-[0.04em] block px-[0.04em]">
+                  <span className={`pl-ch ${w.cls}`}>{w.ch}</span>
                 </span>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="pl-chrome">
-          <div className="h-px w-full bg-ink/15">
-            <div ref={bar} className="h-full origin-left scale-x-0 bg-signal" />
-          </div>
+                {isI && (
+                  /* the ticker: a round badge where the dot of the i would be */
+                  <div
+                    ref={tile}
+                    className="absolute left-1/2 top-[0.03em] aspect-square w-[0.3em] -translate-x-1/2 overflow-hidden rounded-full bg-signal opacity-0 shadow-[0_0_0_0.035em_rgba(106,61,255,0.18)]"
+                  >
+                    {ICONS.map((ic) => (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        key={ic.alt}
+                        src={ic.src}
+                        alt=""
+                        className="pl-icon absolute inset-0 m-auto h-[50%] w-[50%] object-contain"
+                        style={{ filter: "brightness(0) invert(1)" }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </span>
+            );
+          })}
         </div>
       </div>
 
