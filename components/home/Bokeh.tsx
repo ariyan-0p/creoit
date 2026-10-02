@@ -41,13 +41,13 @@ const vertex = /* glsl */ `
     gl_PointSize = min(size, 320.0);
     gl_Position = vec4(p, 0.0, 1.0);
 
-    vec3 warm = vec3(1.0, 0.24, 0.12);
-    vec3 cream = vec3(1.0, 0.86, 0.66);
-    vec3 rose = vec3(1.0, 0.45, 0.35);
+    vec3 warm = vec3(0.50, 0.30, 1.0);
+    vec3 cream = vec3(0.86, 0.80, 1.0);
+    vec3 rose = vec3(0.66, 0.54, 1.0);
     vColor = seed.w < 0.45 ? warm : (seed.w < 0.8 ? cream : rose);
     vFocus = focus;
     float edgeFade = smoothstep(1.2, 0.85, abs(p.y)) ;
-    vAlpha = mix(0.09, 0.55, focus) * edgeFade * (0.6 + seed.x * 0.6);
+    vAlpha = mix(0.17, 0.85, focus) * edgeFade * (0.6 + seed.x * 0.6);
   }
 `;
 

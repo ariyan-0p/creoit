@@ -90,7 +90,7 @@ export function Preloader() {
       ref={root}
       id="preloader"
       aria-hidden="true"
-      className="fixed inset-0 z-[200] flex flex-col justify-between bg-ink px-[var(--pad)] py-[var(--pad)] text-paper"
+      className="fixed inset-0 z-[200] flex flex-col justify-between bg-deep px-[var(--pad)] py-[var(--pad)] text-paper"
       style={{ clipPath: "inset(0 0 0% 0)" }}
     >
       <div className="mono pl-in pl-out flex items-center justify-between">
@@ -105,11 +105,11 @@ export function Preloader() {
           <div className="pl-in display flex items-end gap-4 text-[clamp(3rem,10vw,9rem)]">
             <span className="mask-line block h-[1em] overflow-hidden leading-[1]">
               <span ref={word} className="block">
-                <span className="block text-paper/30 line-through decoration-signal decoration-[0.06em]">
+                <span className="block text-paper/30 line-through decoration-lilac decoration-[0.06em]">
                   Forgettable
                 </span>
                 <span className="block">
-                  Un<span className="serif-i text-signal">forgettable</span>
+                  Un<span className="serif-i text-lilac">forgettable</span>
                 </span>
               </span>
             </span>
@@ -125,7 +125,7 @@ export function Preloader() {
           </span>
         </div>
         <div className="h-px w-full bg-paper/20">
-          <div ref={bar} className="h-full origin-left scale-x-0 bg-signal" />
+          <div ref={bar} className="h-full origin-left scale-x-0 bg-lilac" />
         </div>
       </div>
     </div>

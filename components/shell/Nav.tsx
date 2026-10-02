@@ -170,7 +170,7 @@ export function Nav() {
         id="site-menu"
         role="dialog"
         aria-label="Site menu"
-        className="fixed inset-0 z-[150] flex flex-col justify-between bg-ink px-[var(--pad)] pb-[var(--pad)] pt-28 text-paper"
+        className="fixed inset-0 z-[150] flex flex-col justify-between bg-deep px-[var(--pad)] pb-[var(--pad)] pt-28 text-paper"
       >
         <nav aria-label="Main">
           <ul className="group/list flex flex-col">
@@ -180,7 +180,7 @@ export function Nav() {
                 className="border-b border-paper/10 transition-opacity duration-500 group-hover/list:opacity-30 hover:opacity-100!"
               >
                 <Link href={l.href} onClick={() => setOpen(false)} className="menu-link flex items-baseline gap-5 overflow-hidden py-[0.6vh]" data-cursor="Go">
-                  <span className="mono w-8 text-signal">0{i + 1}</span>
+                  <span className="mono w-8 text-lilac">0{i + 1}</span>
                   <span className="menu-label display block text-[clamp(2.4rem,8.2vh,6.5rem)]">{l.label}</span>
                 </Link>
               </li>

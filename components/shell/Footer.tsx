@@ -12,7 +12,7 @@ import { Clock } from "./Clock";
 export function Footer() {
   return (
     <footer
-      className="fixed inset-x-0 bottom-0 z-0 flex flex-col justify-between overflow-hidden bg-ink px-[var(--pad)] pb-16 pt-24 md:pb-20 text-paper"
+      className="fixed inset-x-0 bottom-0 z-0 flex flex-col justify-between overflow-hidden bg-deep px-[var(--pad)] pb-16 pt-24 md:pb-20 text-paper"
       style={{ height: "var(--footer-h)" }}
     >
       <div>
@@ -25,8 +25,8 @@ export function Footer() {
             <br />
             something{" "}
             <span className="whitespace-nowrap">
-              <span className="serif-i text-signal">unforgettable</span>
-              <span className="inline-block translate-y-[0.04em] pl-[0.12em] text-signal transition-transform duration-700 group-hover:translate-x-3">
+              <span className="serif-i text-lilac">unforgettable</span>
+              <span className="inline-block translate-y-[0.04em] pl-[0.12em] text-lilac transition-transform duration-700 group-hover:translate-x-3">
                 →
               </span>
             </span>

@@ -132,6 +132,14 @@ export function Hero() {
       className="sticky top-0 z-0 h-[100svh] min-h-[640px] w-full overflow-hidden bg-ink text-paper"
     >
       <div ref={inner} className="absolute inset-0 origin-center will-change-transform">
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(60% 55% at 78% 88%, rgba(106,61,255,0.42) 0%, rgba(106,61,255,0) 70%), radial-gradient(45% 45% at 12% 12%, rgba(20,0,33,0.9) 0%, rgba(20,0,33,0) 100%)",
+          }}
+        />
         <Bokeh className="absolute inset-0" />
 
         {/* vignette keeps type legible over the discs */}
@@ -160,7 +168,7 @@ export function Hero() {
         {/* content */}
         <div className="absolute inset-0 flex flex-col justify-end px-[var(--pad-in)] pb-[var(--pad-bottom)] pt-32">
           <p className="mono hero-fade mb-6 flex items-center gap-3 text-paper/70">
-            <span className="h-px w-8 bg-signal" /> 360° creative marketing — Bhopal, India
+            <span className="h-px w-8 bg-lilac" /> 360° creative marketing — Bhopal, India
           </p>
 
           <h1 className="display grid text-[clamp(3rem,10.6vw,12rem)] leading-[0.9] tracking-[-0.025em]">
@@ -180,7 +188,7 @@ export function Hero() {
               <Lines />
             </span>
             <span className="mask-line col-start-1 row-start-2 block pb-[0.08em]">
-              <span className="hero-rem serif-i block text-signal normal-case tracking-[-0.03em] leading-[0.95]">
+              <span className="hero-rem serif-i block text-lilac normal-case tracking-[-0.03em] leading-[0.95]">
                 remember.
               </span>
             </span>

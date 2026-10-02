@@ -96,9 +96,9 @@ export function Work() {
       </div>
 
       {/* Kalrav — viewfinder frame */}
-      <Link href="/work" data-cursor="View" className="wk-frame relative mt-14 block aspect-[4/5] w-full overflow-hidden bg-[#150907] text-paper sm:aspect-[16/10] md:aspect-[16/9]">
+      <Link href="/work" data-cursor="View" className="wk-frame relative mt-14 block aspect-[4/5] w-full overflow-hidden bg-[#0d0420] text-paper sm:aspect-[16/10] md:aspect-[16/9]">
         <div className="wk-art absolute inset-0 origin-center will-change-transform">
-          <div className="absolute inset-0" style={{ background: "radial-gradient(60% 70% at 50% 50%, #ff5a2e 0%, #b81f0c 38%, #2a0b06 75%, #150907 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(60% 70% at 50% 50%, #8e63ff 0%, #4a22d9 38%, #1a0640 75%, #0d0420 100%)" }} />
           <svg viewBox="-200 -200 400 400" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" aria-hidden>
             {RINGS.map((ring) => (
               <g
@@ -106,7 +106,7 @@ export function Work() {
                 className="wk-ring"
                 style={{ animation: `wk-spin ${ring.d}s linear infinite ${ring.dir < 0 ? "reverse" : ""}` }}
               >
-                <circle r={ring.r} fill="none" stroke="#ffe3c2" strokeOpacity="0.85" strokeWidth={ring.w} strokeLinecap="round" strokeDasharray={ring.dash} />
+                <circle r={ring.r} fill="none" stroke="#f1eaff" strokeOpacity="0.85" strokeWidth={ring.w} strokeLinecap="round" strokeDasharray={ring.dash} />
               </g>
             ))}
           </svg>
@@ -114,7 +114,7 @@ export function Work() {
         </div>
 
         <div className="absolute inset-0 grid place-items-center">
-          <p className="display text-center text-[clamp(3.4rem,15vw,15rem)] leading-[0.82] text-paper mix-blend-overlay">
+          <p className="display text-center text-[clamp(3.4rem,15vw,15rem)] leading-[0.82] text-paper">
             KAL<br className="sm:hidden" />RAV
           </p>
         </div>
@@ -170,16 +170,16 @@ export function Work() {
                 className="group relative flex aspect-[4/5] flex-col justify-between overflow-hidden rounded-[10px] border border-ink/25 bg-ink p-5 text-paper transition-colors duration-700 hover:border-signal"
               >
                 <span aria-hidden className="absolute inset-0 translate-y-full bg-signal transition-transform duration-[900ms] ease-[var(--ease)] group-hover:translate-y-0" />
-                <span aria-hidden className="absolute inset-x-0 top-0 h-3 opacity-40 [background:repeating-linear-gradient(90deg,transparent_0_10px,rgba(238,234,225,.7)_10px_18px)]" />
-                <span aria-hidden className="absolute inset-x-0 bottom-0 h-3 opacity-40 [background:repeating-linear-gradient(90deg,transparent_0_10px,rgba(238,234,225,.7)_10px_18px)]" />
-                <span className="mono relative z-10 mt-4 flex justify-between group-hover:text-ink">
+                <span aria-hidden className="absolute inset-x-0 top-0 h-3 opacity-40 [background:repeating-linear-gradient(90deg,transparent_0_10px,rgba(255,255,255,.7)_10px_18px)]" />
+                <span aria-hidden className="absolute inset-x-0 bottom-0 h-3 opacity-40 [background:repeating-linear-gradient(90deg,transparent_0_10px,rgba(255,255,255,.7)_10px_18px)]" />
+                <span className="mono relative z-10 mt-4 flex justify-between group-hover:text-paper">
                   <span>Frame {u.n}</span>
                   <span>Unexposed</span>
                 </span>
                 <span className="relative z-10 mb-3">
-                  <span className="display block text-[clamp(1.8rem,2.8vw,2.8rem)] group-hover:text-ink">{u.kind}</span>
-                  <span className="serif-i mt-2 block text-xl text-paper/70 group-hover:text-ink">{u.note}</span>
-                  <span className="mono mt-5 block group-hover:text-ink">Develop this frame →</span>
+                  <span className="display block text-[clamp(1.8rem,2.8vw,2.8rem)] group-hover:text-paper">{u.kind}</span>
+                  <span className="serif-i mt-2 block text-xl text-paper/70 group-hover:text-paper">{u.note}</span>
+                  <span className="mono mt-5 block group-hover:text-paper">Develop this frame →</span>
                 </span>
               </Link>
             </li>

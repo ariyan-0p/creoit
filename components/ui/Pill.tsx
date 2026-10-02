@@ -16,7 +16,7 @@ export function Pill({
   const tones = {
     light: "border-paper/60 text-paper before:bg-paper hover:text-ink",
     dark: "border-ink/60 text-ink before:bg-ink hover:text-paper",
-    signal: "border-signal bg-signal text-ink before:bg-paper hover:border-paper",
+    signal: "border-signal bg-signal text-paper before:bg-paper hover:border-paper hover:text-ink",
   } as const;
 
   return (

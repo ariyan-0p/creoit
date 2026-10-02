@@ -8,10 +8,12 @@
 @theme inline {
   --color-ink: #0a0a0b;
   --color-ink-2: #131314;
-  --color-paper: #eeeae1;
-  --color-bone: #d9d4c7;
-  --color-signal: #ff3d1f;
-  --color-dim: #8a8579;
+  --color-paper: #ffffff;
+  --color-bone: #e7e3f0;
+  --color-signal: #6a3dff;
+  --color-lilac: #a48bff;
+  --color-deep: #140021;
+  --color-dim: #8f8aa3;
 
   --font-display: var(--font-clash), "Helvetica Neue", Arial, sans-serif;
   --font-serif: var(--font-moniqa), Georgia, serif;
@@ -84,7 +86,7 @@ canvas {
 
 ::selection {
   background: var(--color-signal);
-  color: var(--color-ink);
+  color: var(--color-paper);
 }
 
 :focus-visible {
@@ -175,7 +177,7 @@ canvas {
   width: 0.55rem;
   height: 0.55rem;
   border-radius: 50%;
-  background: var(--color-signal);
+  background: var(--color-lilac);
   animation: rec 1.4s steps(2, jump-none) infinite;
 }
 @keyframes rec {

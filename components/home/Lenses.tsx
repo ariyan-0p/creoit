@@ -116,12 +116,12 @@ export function Lenses() {
       data-nav="dark"
       id="what-we-do"
       aria-label="What we do"
-      className="relative z-10 flex h-[100svh] min-h-[640px] w-full flex-col overflow-hidden bg-ink px-[var(--pad)] pb-[var(--pad)] pt-24 text-paper"
+      className="relative z-10 flex h-[100svh] min-h-[640px] w-full flex-col overflow-hidden bg-deep px-[var(--pad)] pb-[var(--pad)] pt-24 text-paper"
     >
       <div className="mono flex items-center justify-between text-paper/55">
         <span>[ 02 ] Six lenses, one team</span>
         <span className="hidden sm:block">
-          Aperture <span ref={stopRef} className="text-signal">f/1.4</span>
+          Aperture <span ref={stopRef} className="text-lilac">f/1.4</span>
         </span>
       </div>
 
@@ -131,25 +131,25 @@ export function Lenses() {
           <svg viewBox="-100 -100 200 200" className="h-full w-full" role="img" aria-label="Camera aperture opening with each service">
             <defs>
               <radialGradient id="lens-light" cx="50%" cy="50%" r="50%">
-                <stop offset="0" stopColor="#fff3df" />
-                <stop offset="0.35" stopColor="#ff6a3d" />
-                <stop offset="1" stopColor="#ff3d1f" />
+                <stop offset="0" stopColor="#ffffff" />
+                <stop offset="0.35" stopColor="#a48bff" />
+                <stop offset="1" stopColor="#5a2bff" />
               </radialGradient>
             </defs>
             <circle r={RIM} fill="url(#lens-light)" />
-            <path ref={holeRef} fill="#131314" fillRule="evenodd" />
+            <path ref={holeRef} fill="#0a0a0b" fillRule="evenodd" />
             {Array.from({ length: N }).map((_, i) => (
               <line
                 key={i}
                 ref={(el) => {
                   lineRefs.current[i] = el;
                 }}
-                stroke="rgba(238,234,225,0.22)"
+                stroke="rgba(255,255,255,0.28)"
                 strokeWidth="0.45"
               />
             ))}
-            <circle r={RIM} fill="none" stroke="rgba(238,234,225,0.55)" strokeWidth="0.8" />
-            <circle r={RIM + 4} fill="none" stroke="rgba(238,234,225,0.14)" strokeWidth="0.5" strokeDasharray="1.2 2.4" />
+            <circle r={RIM} fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" />
+            <circle r={RIM + 4} fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="0.5" strokeDasharray="1.2 2.4" />
           </svg>
         </div>
 
@@ -157,9 +157,9 @@ export function Lenses() {
         <div className="relative min-h-[46vh] md:col-span-7 md:min-h-[58vh]">
           {services.map((s) => (
             <article key={s.id} className="lens-panel absolute inset-0 flex flex-col justify-center">
-              <p className="mono mb-4 flex items-center gap-3 text-signal">
+              <p className="mono mb-4 flex items-center gap-3 text-lilac">
                 <span>{s.number}</span>
-                <span className="h-px w-10 bg-signal/60" />
+                <span className="h-px w-10 bg-lilac/60" />
                 <span className="text-paper/55">{STOPS[Number(s.number) - 1]}</span>
               </p>
               <h3 className="display text-[clamp(2.6rem,7.4vw,8rem)]">{s.title}</h3>
@@ -187,7 +187,7 @@ export function Lenses() {
           ))}
         </ul>
         <span className="relative block h-32 w-px bg-paper/20">
-          <span className="lens-bar absolute inset-0 origin-top scale-y-[0.16] bg-signal" />
+          <span className="lens-bar absolute inset-0 origin-top scale-y-[0.16] bg-lilac" />
         </span>
       </div>
     </section>

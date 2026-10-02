@@ -91,12 +91,12 @@ export function Questions() {
         <div className="mono flex items-center justify-between text-paper/55">
           <span>[ 05 ] Our thinking</span>
           <span>
-            Q <span ref={counter} className="text-signal">01</span> / 05
+            Q <span ref={counter} className="text-lilac">01</span> / 05
           </span>
         </div>
 
         <h2 id="q-title" className="display mt-8 max-w-[11ch] text-[clamp(2.2rem,5.6vw,6rem)] leading-[0.96]">
-          Everything starts with a <span className="serif-i text-signal text-[1.08em]">question.</span>
+          Everything starts with a <span className="serif-i text-lilac text-[1.08em]">question.</span>
         </h2>
 
         <div className="pointer-events-none absolute inset-x-[var(--pad)] bottom-[var(--pad)] top-[42%] md:left-[34%] md:top-24">
@@ -120,16 +120,16 @@ export function Questions() {
           <span className="hidden sm:block">Five moves</span>
         </div>
         <h3 className="display max-w-[14ch] text-[clamp(2.2rem,5.6vw,6rem)] leading-[0.96]">
-          From idea to <span className="serif-i text-[1.08em] text-signal">impact.</span>
+          From idea to <span className="serif-i text-[1.08em] text-lilac">impact.</span>
         </h3>
 
         <div className="pr-steps relative mt-16">
-          <div className="pr-line absolute left-0 right-0 top-[0.4rem] hidden h-px bg-signal lg:block" aria-hidden />
+          <div className="pr-line absolute left-0 right-0 top-[0.4rem] hidden h-px bg-lilac lg:block" aria-hidden />
           <ol className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6">
             {STEPS.map((s) => (
               <li key={s.n} className="pr-step relative lg:pt-10">
-                <span className="absolute left-0 top-0 hidden h-3 w-3 rounded-full bg-signal lg:block" aria-hidden />
-                <p className="mono mb-3 text-signal">{s.n}</p>
+                <span className="absolute left-0 top-0 hidden h-3 w-3 rounded-full bg-lilac lg:block" aria-hidden />
+                <p className="mono mb-3 text-lilac">{s.n}</p>
                 <p className="display text-[clamp(1.7rem,2.4vw,2.6rem)]">{s.t}</p>
                 <p className="mt-3 max-w-[24ch] text-[0.92rem] leading-relaxed text-paper/65">{s.d}</p>
               </li>
