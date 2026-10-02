@@ -16,7 +16,7 @@
   --color-dim: #8f8aa3;
 
   --font-display: var(--font-clash), "Helvetica Neue", Arial, sans-serif;
-  --font-serif: var(--font-moniqa), Georgia, serif;
+  --font-serif: var(--font-fraunces), Georgia, serif;
   --font-mono: var(--font-chivo), ui-monospace, monospace;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -118,7 +118,8 @@ canvas {
 .serif-i {
   font-family: var(--font-serif);
   font-style: italic;
-  font-weight: 400;
+  font-weight: 500;
+  font-optical-sizing: auto;
   text-transform: none;
   letter-spacing: -0.02em;
 }

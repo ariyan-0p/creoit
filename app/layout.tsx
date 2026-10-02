@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Chivo_Mono } from "next/font/google";
+import { Chivo_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/providers/SmoothScrollProvider";
 import { Shell } from "@/components/shell/Shell";
@@ -12,13 +12,11 @@ const clash = localFont({
   display: "swap",
 });
 
-const moniqa = localFont({
-  src: [
-    { path: "../public/fonts/moniqa-italic.ttf", weight: "400", style: "italic" },
-    { path: "../public/fonts/moniqa-bold-italic.ttf", weight: "700", style: "italic" },
-    { path: "../public/fonts/moniqa-regular.ttf", weight: "400", style: "normal" },
-  ],
-  variable: "--font-moniqa",
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  style: ["italic"],
+  axes: ["opsz"],
+  variable: "--font-fraunces",
   display: "swap",
 });
 
@@ -68,7 +66,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${clash.variable} ${moniqa.variable} ${chivo.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${clash.variable} ${fraunces.variable} ${chivo.variable}`}>
       <body>
         <SmoothScrollProvider>
           <Shell>{children}</Shell>

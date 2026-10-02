@@ -137,7 +137,7 @@ export function Preloader() {
     <div id="preloader" aria-hidden="true" className="fixed inset-0 z-[200]">
       <style>{`
         .pl-ch{display:inline-block;transform:translateY(118%)}
-        .pl-serif{font-family:var(--font-moniqa),Georgia,serif;font-style:italic;font-weight:700}
+        .pl-serif{font-family:var(--font-fraunces),Georgia,serif;font-style:italic;font-weight:600;font-optical-sizing:auto}
         .pl-sans{font-family:var(--font-clash),'Helvetica Neue',sans-serif;font-weight:600}
         .pl-dot{color:var(--color-signal)}
         .pl-chrome{opacity:0}
