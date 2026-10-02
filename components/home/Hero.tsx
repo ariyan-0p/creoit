@@ -93,13 +93,14 @@ export function Hero() {
       measure();
       const t = (performance.now() - t0) / 1000;
       const useReal = pointer.moved;
-      const px = useReal ? pointer.x : window.innerWidth * (0.5 + Math.sin(t * 0.55) * 0.3);
-      const py = useReal ? pointer.y : window.innerHeight * (0.45 + Math.sin(t * 0.8 + 1) * 0.12);
+      // No pointer (touch / idle): sweep the lens back and forth across the headline itself.
+      const px = useReal ? pointer.x : rect.left + rect.w * (0.5 + Math.sin(t * 0.7) * 0.5);
+      const py = useReal ? pointer.y : rect.top + rect.h * (0.5 + Math.sin(t * 1.15 + 1) * 0.32);
       lens.tx = px - rect.left;
       lens.ty = py - rect.top;
       lens.x += (lens.tx - lens.x) * 0.14;
       lens.y += (lens.ty - lens.y) * 0.14;
-      const R = Math.max(150, Math.min(window.innerWidth * 0.17, 280)) * lens.r;
+      const R = Math.max(170, Math.min(window.innerWidth * 0.17, 280)) * lens.r;
       const m = reduce ? "100% 100%" : "";
       const s = sharp.current;
       if (s) {
@@ -172,7 +173,7 @@ export function Hero() {
           </p>
 
           <h1 className="display grid text-[clamp(2.6rem,min(10.6vw,15svh),12rem)] leading-[0.9] tracking-[-0.025em]">
-            <span ref={soft} aria-hidden className="col-start-1 row-start-1 select-none text-paper/55 blur-[7px]">
+            <span ref={soft} aria-hidden className="col-start-1 row-start-1 select-none text-paper/55 blur-[7px] [@media(hover:none)]:text-paper/80 [@media(hover:none)]:blur-[2.5px]">
               <Lines />
             </span>
             <span
@@ -216,7 +217,9 @@ export function Hero() {
         <div className="mono hero-fade absolute inset-x-[var(--pad-in)] bottom-[var(--pad)] flex items-center justify-between text-paper/55">
           <span className="hidden sm:block" />
           <span className="flex items-center gap-3">
-            Move to focus <span className="inline-block h-px w-10 bg-paper/40" /> Scroll
+            <span className="[@media(hover:none)]:hidden">Move to focus</span>
+            <span className="hidden [@media(hover:none)]:inline">Watch it focus</span>
+            <span className="inline-block h-px w-10 bg-paper/40" /> Scroll
           </span>
         </div>
       </div>
