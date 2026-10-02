@@ -26,7 +26,15 @@ function Lines() {
     <>
       {LINES.map((l) => (
         <span key={l} className="mask-line block">
-          <span className="hero-line block">{l}</span>
+          {/* phones: one word per line (bigger type fills the screen); md+: two lines */}
+          <span className="hero-line block">
+            {l.split(" ").map((w, i) => (
+              <span key={w} className="block md:inline">
+                {i > 0 && <span className="hidden md:inline"> </span>}
+                {w}
+              </span>
+            ))}
+          </span>
         </span>
       ))}
     </>
@@ -172,7 +180,7 @@ export function Hero() {
             <span className="h-px w-8 bg-lilac" /> 360° creative marketing — Bhopal, India
           </p>
 
-          <h1 className="display grid text-[clamp(2.6rem,min(10.6vw,15svh),12rem)] leading-[0.9] tracking-[-0.025em]">
+          <h1 className="display grid text-[clamp(2.6rem,min(10.6vw,15svh),12rem)] leading-[0.9] tracking-[-0.025em] max-md:text-[clamp(2.6rem,min(17.5vw,12.5svh),6.5rem)]">
             <span ref={soft} aria-hidden className="col-start-1 row-start-1 select-none text-paper/55 blur-[7px] [@media(hover:none)]:text-paper/80 [@media(hover:none)]:blur-[2.5px]">
               <Lines />
             </span>
