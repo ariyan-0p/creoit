@@ -200,14 +200,16 @@ export function Preloader() {
                     className="absolute left-1/2 top-[0.03em] aspect-square w-[0.3em] -translate-x-1/2 overflow-hidden rounded-full bg-signal opacity-0 shadow-[0_0_0_0.035em_rgba(106,61,255,0.18)]"
                   >
                     {ICONS.map((ic) => (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={ic.alt}
-                        src={ic.src}
-                        alt=""
-                        className="pl-icon absolute inset-0 m-auto h-[50%] w-[50%] object-contain"
-                        style={{ filter: "brightness(0) invert(1)" }}
-                      />
+                      /* each slot is the FULL badge, so sliding ±100% moves the neighbour completely out of view */
+                      <div key={ic.alt} className="pl-icon absolute inset-0 grid place-items-center">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={ic.src}
+                          alt=""
+                          className="h-[50%] w-[50%] object-contain"
+                          style={{ filter: "brightness(0) invert(1)" }}
+                        />
+                      </div>
                     ))}
                   </div>
                 )}
