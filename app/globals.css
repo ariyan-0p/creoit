@@ -314,3 +314,14 @@ html.menu-open {
 @media (prefers-reduced-motion: reduce) {
   .tb-spin { animation: none; }
 }
+
+@keyframes tb-arrow {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(14px); }
+}
+.tb-arrow {
+  animation: tb-arrow 2.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-arrow { animation: none; }
+}

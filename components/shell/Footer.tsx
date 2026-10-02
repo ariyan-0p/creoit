@@ -24,19 +24,29 @@ export function Footer() {
             <h2 className="display text-[clamp(2.4rem,8.2vw,9rem)]">
               Let&apos;s make
               <br />
-              something{" "}
-              <span className="whitespace-nowrap">
-                <span className="serif-i text-lilac">unforgettable</span>
-                <span className="inline-block translate-y-[0.04em] pl-[0.12em] text-lilac transition-transform duration-700 group-hover:translate-x-3">
-                  →
-                </span>
-              </span>
+              something
+              <br />
+              <span className="whitespace-nowrap serif-i text-lilac">unforgettable</span>
             </h2>
           </Link>
         </div>
 
-        {/* a small, quiet call to action for the empty right side (desktop only) */}
-        <div className="hidden shrink-0 flex-col items-center gap-4 pt-8 md:flex">
+        {/* a small, quiet call to action, centred in the empty space (desktop only):
+            an arrow pointing the way, then the badge */}
+        <div className="hidden flex-1 items-center justify-center gap-[clamp(1rem,3vw,3rem)] self-center md:flex">
+          <svg
+            viewBox="0 0 160 40"
+            className="tb-arrow w-[clamp(4.5rem,9vw,9.5rem)] text-lilac"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M4 20 H152 M132 4 L152 20 L132 36" />
+          </svg>
+          <div className="flex shrink-0 flex-col items-center gap-4">
           <Link
             href="/contact"
             data-cursor="Talk"
@@ -60,6 +70,7 @@ export function Footer() {
             </span>
           </Link>
           <p className="mono max-w-[18ch] text-center text-paper/55">Tell us what you&apos;re trying to build.</p>
+          </div>
         </div>
       </div>
 
