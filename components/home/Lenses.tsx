@@ -3,13 +3,10 @@
 /**
  * Lenses — six services as six apertures.
  *
- * The section pins; scroll steps the iris through f/1.4 → f/8 while the active
- * service swaps. Around the iris:
- *  - depth of field: bokeh lights behind the blades go from big+soft (wide open)
- *    to small+sharp (stopped down)
- *  - an engraved f-stop ring that turns so the active stop sits under the marker
- *  - a live exposure readout (shutter slows as the iris closes — same exposure)
- * Each service also draws its own little illustration as it arrives.
+ * The section pins; scroll opens and closes the iris while the active service
+ * swaps. Behind the blades soft lights go from big+blurry (wide open) to
+ * small+sharp (stopped down). Each service also sketches its own little
+ * illustration as it arrives, and points to real work where we have it.
  *
  * The iris is plain SVG geometry recomputed per tick (6 lines + 1 path + a few
  * circles), so it stays cheap.
@@ -21,10 +18,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { services } from "@/content/services";
 
-const STOPS = ["f/1.4", "f/2", "f/2.8", "f/4", "f/5.6", "f/8"];
-const SHUTTER = ["1/2000", "1/1000", "1/500", "1/250", "1/125", "1/60"]; // same exposure at every stop
-const DOF = ["Very shallow", "Shallow", "Moderate", "Moderate", "Deep", "Very deep"];
-const RADII = [62, 53, 45, 37, 29, 21]; // hole circumradius per stop
+const RADII = [62, 53, 45, 37, 29, 21]; // hole circumradius per service
 const RIM = 94;
 const N = 6;
 
@@ -34,7 +28,7 @@ const SEEN_IN: Record<string, { href: string; label: string }> = {
   experiences: { href: "/work/kalrav", label: "Kalrav Garba 2024" },
 };
 
-/** Bokeh lights behind the blades: [x, y, base radius]. */
+/** Soft lights behind the blades: [x, y, base radius]. */
 const BOKEH: [number, number, number][] = [
   [-18, -12, 11],
   [22, -20, 9],
@@ -167,15 +161,11 @@ export function Lenses() {
   const lineRefs = useRef<(SVGLineElement | null)[]>([]);
   const bokehRefs = useRef<(SVGCircleElement | null)[]>([]);
   const blurRef = useRef<SVGFEGaussianBlurElement>(null);
-  const ringRef = useRef<SVGGElement>(null);
-  const stopRef = useRef<HTMLSpanElement>(null);
-  const hudStop = useRef<HTMLSpanElement>(null);
-  const hudShutter = useRef<HTMLSpanElement>(null);
-  const hudDof = useRef<HTMLSpanElement>(null);
+  const countRef = useRef<HTMLSpanElement>(null);
 
   useGSAP(
     () => {
-      const draw = (r: number, rot: number, dof: number, ring: number) => {
+      const draw = (r: number, rot: number, dof: number) => {
         const { lines, hole } = iris(r, rot);
         holeRef.current?.setAttribute("d", `M0 -${RIM}A${RIM} ${RIM} 0 1 1 0 ${RIM}A${RIM} ${RIM} 0 1 1 0 -${RIM}Z${hole}`);
         lines.forEach((l, i) => {
@@ -186,7 +176,7 @@ export function Lenses() {
           el.setAttribute("x2", l.x2.toFixed(2));
           el.setAttribute("y2", l.y2.toFixed(2));
         });
-        // depth of field: dof 0 (wide open) → 1 (stopped down)
+        // lights: dof 0 (wide open) → 1 (stopped down)
         const size = 1.55 - dof * 1.2;
         blurRef.current?.setAttribute("stdDeviation", (7 - dof * 6.6).toFixed(2));
         bokehRefs.current.forEach((c, i) => {
@@ -194,11 +184,10 @@ export function Lenses() {
           c.setAttribute("r", (BOKEH[i][2] * size).toFixed(2));
           c.setAttribute("opacity", (0.5 + dof * 0.45).toFixed(2));
         });
-        ringRef.current?.setAttribute("transform", `rotate(${ring.toFixed(2)})`);
       };
 
-      const state = { r: RADII[0], rot: 0, dof: 0, ring: 0 };
-      draw(state.r, state.rot, state.dof, state.ring);
+      const state = { r: RADII[0], rot: 0, dof: 0 };
+      draw(state.r, state.rot, state.dof);
 
       const mm = gsap.matchMedia();
 
@@ -221,12 +210,8 @@ export function Lenses() {
         pops.forEach((p, i) => i > 0 && gsap.set(p, { opacity: 0, scale: 0.2, transformOrigin: "50% 50%" }));
 
         const setStop = (i: number) => {
-          if (stopRef.current) stopRef.current.textContent = STOPS[i];
-          if (hudStop.current) hudStop.current.textContent = STOPS[i];
-          if (hudShutter.current) hudShutter.current.textContent = SHUTTER[i];
-          if (hudDof.current) hudDof.current.textContent = DOF[i];
+          if (countRef.current) countRef.current.textContent = `0${i + 1}`;
           ticks.forEach((t, k) => t.classList.toggle("is-on", k === i));
-          root.current?.querySelectorAll<HTMLElement>(".dof-cell").forEach((c, k) => c.classList.toggle("is-on", k <= i));
         };
         setStop(0);
 
@@ -259,9 +244,8 @@ export function Lenses() {
               r: RADII[i],
               rot: i * 22,
               dof: i / (N - 1),
-              ring: -i * 60,
               duration: 1,
-              onUpdate: () => draw(state.r, state.rot, state.dof, state.ring),
+              onUpdate: () => draw(state.r, state.rot, state.dof),
             },
             at
           )
@@ -290,24 +274,22 @@ export function Lenses() {
         .lp-static{height:auto!important;min-height:0!important;overflow:visible!important}
         .lp-static .lens-panel{position:relative!important;opacity:1!important;visibility:visible!important;transform:none!important;margin-bottom:4rem}
         .lp-static .lp-aperture,.lp-static .lp-rail{display:none}
-        .dof-cell{background:rgba(255,255,255,.18);transition:background .5s}
-        .dof-cell.is-on{background:var(--color-lilac)}
         @keyframes lp-drift{0%,100%{transform:translate(0,0)}50%{transform:translate(2.2px,-2.6px)}}
         .lp-bk{animation:lp-drift 7s ease-in-out infinite}
       `}</style>
 
       <div className="mono flex items-center justify-between text-paper/55">
-        <span>[ 02 ] Six lenses, one team</span>
+        <span>[ 02 ] What we do</span>
         <span className="hidden sm:block">
-          Aperture <span ref={stopRef} className="text-lilac">f/1.4</span>
+          <span ref={countRef} className="text-lilac">01</span> / 06
         </span>
       </div>
 
       <div className="relative mt-4 grid flex-1 items-center gap-6 md:grid-cols-12">
         {/* ── Aperture ───────────────────────────────────────── */}
-        <div className="lp-aperture relative mx-auto flex w-[min(27vh,66vw)] flex-col items-center md:col-span-5 md:w-[min(44vw,62vh)]">
+        <div className="lp-aperture relative mx-auto flex w-[min(30vh,70vw)] flex-col items-center md:col-span-5 md:w-[min(42vw,66vh)]">
           <div className="relative aspect-square w-full">
-            <svg viewBox="-124 -124 248 248" className="h-full w-full" role="img" aria-label="Camera aperture: opens and closes with each service">
+            <svg viewBox="-104 -104 208 208" className="h-full w-full" role="img" aria-label="An aperture that opens and closes as you move through our services">
               <defs>
                 <radialGradient id="lens-light" cx="50%" cy="50%" r="50%">
                   <stop offset="0" stopColor="#ffffff" />
@@ -322,7 +304,7 @@ export function Lenses() {
                 </clipPath>
               </defs>
 
-              {/* light + depth-of-field bokeh (only the hole shows them) */}
+              {/* light + soft glowing lights (only the hole shows them) */}
               <circle r={RIM} fill="url(#lens-light)" />
               <g clipPath="url(#lens-disc)">
                 <g filter="url(#lens-bokeh)">
@@ -357,79 +339,21 @@ export function Lenses() {
                 />
               ))}
               <circle r={RIM} fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" />
-
-              {/* engraved f-stop ring: turns so the active stop sits under the marker */}
-              <circle r="100" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="0.5" strokeDasharray="1.2 2.4" />
-              <g ref={ringRef}>
-                {Array.from({ length: 36 }).map((_, i) => (
-                  <line
-                    key={i}
-                    x1="0"
-                    y1={-102}
-                    x2="0"
-                    y2={i % 6 === 0 ? -108 : -105}
-                    stroke="rgba(255,255,255,0.45)"
-                    strokeWidth={i % 6 === 0 ? 0.9 : 0.5}
-                    transform={`rotate(${i * 10})`}
-                  />
-                ))}
-                {STOPS.map((s, i) => (
-                  <text
-                    key={s}
-                    className="mono"
-                    fill="rgba(255,255,255,0.78)"
-                    fontSize="7.2"
-                    textAnchor="middle"
-                    transform={`rotate(${i * 60}) translate(0,-116)`}
-                  >
-                    {s.replace("f/", "")}
-                  </text>
-                ))}
-              </g>
-              {/* fixed marker */}
-              <path d="M-4 -123 L4 -123 L0 -118 Z" fill="#a48bff" />
+              <circle r={RIM + 5} fill="none" stroke="rgba(255,255,255,0.16)" strokeWidth="0.5" strokeDasharray="1.2 2.4" />
             </svg>
-          </div>
-
-          {/* exposure readout */}
-          <div className="mono mt-3 hidden w-full max-w-[26rem] grid-cols-3 gap-x-4 gap-y-2 border-t border-paper/15 pt-3 text-paper/60 md:grid">
-            <span>
-              Aperture
-              <br />
-              <span ref={hudStop} className="text-paper">f/1.4</span>
-            </span>
-            <span>
-              Shutter
-              <br />
-              <span ref={hudShutter} className="text-paper">1/2000</span>
-            </span>
-            <span>
-              ISO
-              <br />
-              <span className="text-paper">100</span>
-            </span>
-            <span className="col-span-3 flex items-center gap-3">
-              <span className="shrink-0">Depth of field</span>
-              <span className="flex flex-1 gap-1" aria-hidden>
-                {Array.from({ length: N }).map((_, i) => (
-                  <i key={i} className="dof-cell block h-[3px] flex-1 rounded-full" />
-                ))}
-              </span>
-              <span ref={hudDof} className="w-[6.5rem] shrink-0 text-right text-paper">Very shallow</span>
-            </span>
           </div>
         </div>
 
         {/* ── Panels ─────────────────────────────────────────── */}
         <div className="relative min-h-[48vh] md:col-span-7 md:min-h-[62vh]">
-          {services.map((s, idx) => {
+          {services.map((s) => {
             const seen = SEEN_IN[s.id];
             return (
               <article key={s.id} className="lens-panel absolute inset-0 flex flex-col justify-center">
                 <p className="lp-k mono mb-4 flex items-center gap-3 text-lilac">
                   <span>{s.number}</span>
                   <span className="h-px w-10 bg-lilac/60" />
-                  <span className="text-paper/55">{STOPS[idx]}</span>
+                  <span className="text-paper/55">of 06</span>
                 </p>
                 <h3 className="lp-k display text-[clamp(2.6rem,7.4vw,8rem)]">{s.title}</h3>
 
