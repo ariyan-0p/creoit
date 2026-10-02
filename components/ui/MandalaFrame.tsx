@@ -1,8 +1,9 @@
 /**
- * MandalaFrame — procedural festival-lights art with viewfinder HUD.
- * Used wherever a project needs a visual and no real footage exists yet.
- * Swap the inner art for real footage by passing `children` later.
+ * MandalaFrame — a project's hero frame with viewfinder HUD.
+ * With no footage it shows procedural festival-lights art. Pass `video`
+ * (and optionally `poster`) and the real footage plays over the art instead.
  */
+import { FrameVideo } from "./FrameVideo";
 
 const RINGS = [
   { r: 36, dash: "0 11", w: 6, d: 40, dir: 1 },
@@ -19,12 +20,16 @@ export function MandalaFrame({
   left,
   right,
   hud = true,
+  video,
+  poster,
 }: {
   title: string;
   rec: string;
   left?: string;
   right?: string;
   hud?: boolean;
+  video?: string;
+  poster?: string;
 }) {
   return (
     <>
@@ -40,12 +45,20 @@ export function MandalaFrame({
             </g>
           ))}
         </svg>
+        {video && <FrameVideo src={video} poster={poster} />}
         <div className="grain absolute inset-0 overflow-hidden" aria-hidden />
       </div>
 
-      <div className="absolute inset-0 grid place-items-center">
-        <p className="display text-center text-[clamp(3.4rem,15vw,15rem)] leading-[0.82] text-paper">{title}</p>
-      </div>
+      {video ? (
+        <>
+          <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-ink/25" />
+          <span className="sr-only">{title}</span>
+        </>
+      ) : (
+        <div className="absolute inset-0 grid place-items-center">
+          <p className="display text-center text-[clamp(3.4rem,15vw,15rem)] leading-[0.82] text-paper">{title}</p>
+        </div>
+      )}
 
       {hud && (
         <div className="pointer-events-none absolute inset-[var(--pad)] text-paper/85" aria-hidden>

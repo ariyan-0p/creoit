@@ -40,7 +40,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <PageMotion>
       <section data-nav="dark" className="relative h-[92svh] min-h-[560px] overflow-hidden bg-[#0d0420] text-paper">
-        <MandalaFrame title={p.client} rec={p.projectName} left={p.categories.join(" · ")} right={`Bhopal · ${p.year}`} />
+        <MandalaFrame title={p.client} rec={p.projectName} left={p.categories.join(" · ")} right={`Bhopal · ${p.year}`} video={p.videoUrl} poster={p.posterUrl} />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/70 to-transparent" />
       </section>
 

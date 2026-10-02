@@ -90,7 +90,7 @@ export function Work() {
 
       {/* Kalrav — viewfinder frame */}
       <Link href="/work/kalrav" data-cursor="View" className="wk-frame relative mt-14 block aspect-[4/5] w-full overflow-hidden bg-[#0d0420] text-paper sm:aspect-[16/10] md:aspect-[16/9]">
-        <MandalaFrame title="KALRAV" rec={kalrav.projectName} left={kalrav.categories.join(" · ")} right={`Bhopal · ${kalrav.year}`} />
+        <MandalaFrame title="KALRAV" rec={kalrav.projectName} left={kalrav.categories.join(" · ")} right={`Bhopal · ${kalrav.year}`} video={kalrav.videoUrl} poster={kalrav.posterUrl} />
       </Link>
 
       <div className="px-[var(--pad)]">

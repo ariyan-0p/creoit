@@ -44,7 +44,7 @@ export function WorkGrid() {
                   data-cursor="View"
                   className="relative block aspect-[4/5] overflow-hidden rounded-[14px] bg-[#0d0420] text-paper sm:aspect-[16/10] md:aspect-[21/9]"
                 >
-                  <MandalaFrame title={p.client} rec={p.projectName} left={p.categories.join(" · ")} right={`Bhopal · ${p.year}`} />
+                  <MandalaFrame title={p.client} rec={p.projectName} left={p.categories.join(" · ")} right={`Bhopal · ${p.year}`} video={p.videoUrl} poster={p.posterUrl} />
                 </Link>
               ) : (
                 <Link

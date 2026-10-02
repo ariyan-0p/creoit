@@ -28,7 +28,8 @@ export interface Project {
   categories: ServiceCategory[];
   tagline: string;
   thumbnail: string; // image path or URL
-  videoUrl?: string;
+  videoUrl?: string; // drop a file in /public/videos and set this to play real footage
+  posterUrl?: string; // still shown before the video loads / with reduced motion
   description: string;
   challenge?: string;
   idea?: string;
