@@ -293,9 +293,9 @@ export function Lenses() {
         </span>
       </div>
 
-      <div className="relative mt-4 grid flex-1 items-center gap-6 md:grid-cols-12">
+      <div className="relative mt-4 grid flex-1 items-center gap-6 md:grid-cols-12 md:gap-x-10 lg:gap-x-14 xl:gap-x-20">
         {/* ── Aperture ───────────────────────────────────────── */}
-        <div className="lp-aperture relative mx-auto flex w-[min(30vh,70vw)] flex-col items-center md:col-span-5 md:w-[min(42vw,66vh)]">
+        <div className="lp-aperture relative mx-auto flex w-[min(30vh,70vw)] flex-col items-center md:col-span-5 md:w-[min(100%,66vh)]">
           <div className="relative aspect-square w-full">
             <svg viewBox="-104 -104 208 208" className="h-full w-full" role="img" aria-label="An aperture that opens and closes as you move through our services">
               <defs>
