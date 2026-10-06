@@ -1,7 +1,7 @@
 /**
  * Team Members Content — content/team.ts
  *
- * Order matters: the first four appear in the home-page deck, all of them on /team.
+ * Order matters: everyone appears in the home-page deck and on /team.
  * Photos are cropped 4:5 portraits in public/images/people/. `quote` is optional —
  * add a real line from the person when they have one.
  */

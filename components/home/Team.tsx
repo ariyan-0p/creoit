@@ -21,7 +21,7 @@ import { team } from "@/content/team";
 import { Pill } from "@/components/ui/Pill";
 import { Portrait } from "@/components/ui/Portrait";
 
-const MEMBERS = team.slice(0, 4);
+const MEMBERS = team;
 
 const THEMES = [
   { bg: "bg-signal", text: "text-paper", nav: "dark", sub: "text-paper/80", chip: "border-paper/45 text-paper", frame: "bg-[#4a22d9] text-paper", accent: "text-ink", pill: "light" },
