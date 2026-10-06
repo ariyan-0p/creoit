@@ -48,9 +48,8 @@ const fragment = /* glsl */ `
   void main() {
     vec3 c = texture2D(tMap, vUv).rgb;
     float d = clamp(vN.z, 0.0, 1.0);
-    c *= mix(0.55, 1.0, pow(d, 0.7));
-    float rim = pow(1.0 - d, 2.6);
-    c += vec3(0.42, 0.24, 1.0) * rim * 0.75;
+    c *= mix(0.9, 1.0, pow(d, 0.6));
+    c = mix(vec3(0.42, 0.37, 0.58), c, smoothstep(0.0, 0.07, d));
     gl_FragColor = vec4(c, 1.0);
   }
 `;
@@ -76,12 +75,12 @@ async function buildMapTexture(W: number): Promise<HTMLCanvasElement> {
   const Y = (lat: number) => ((90 - lat) / 180) * H;
 
   // ocean
-  ctx.fillStyle = "#12072b";
+  ctx.fillStyle = "#f3f1fa";
   ctx.fillRect(0, 0, W, H);
 
   // graticule
-  ctx.strokeStyle = "rgba(164,139,255,0.22)";
-  ctx.lineWidth = 2 * k;
+  ctx.strokeStyle = "rgba(70,50,130,0.2)";
+  ctx.lineWidth = Math.max(0.8, 1.4 * k);
   ctx.beginPath();
   for (let lon = -180; lon <= 180; lon += 15) {
     ctx.moveTo(X(lon), 0);
@@ -124,10 +123,10 @@ async function buildMapTexture(W: number): Promise<HTMLCanvasElement> {
     const polys = g.type === "Polygon" ? [g.coordinates] : g.coordinates;
     polys.forEach((poly) => poly.forEach((r) => ring(r)));
   });
-  ctx.fillStyle = "#2b1470";
+  ctx.fillStyle = "#d9d5e6";
   ctx.fill("evenodd");
-  ctx.strokeStyle = "#b9a6ff";
-  ctx.lineWidth = Math.max(1, 3 * k);
+  ctx.strokeStyle = "#9a94b3";
+  ctx.lineWidth = Math.max(0.8, 2 * k);
   ctx.stroke();
 
   // country borders
@@ -137,8 +136,8 @@ async function buildMapTexture(W: number): Promise<HTMLCanvasElement> {
     const pts = unwrap(line);
     OFFSETS.forEach((o) => pts.forEach(([lon, lat], i) => (i ? ctx.lineTo(X(lon + o), Y(lat)) : ctx.moveTo(X(lon + o), Y(lat)))));
   });
-  ctx.strokeStyle = "rgba(185,166,255,0.55)";
-  ctx.lineWidth = Math.max(0.8, 1.6 * k);
+  ctx.strokeStyle = "rgba(130,120,160,0.55)";
+  ctx.lineWidth = Math.max(0.6, 1.1 * k);
   ctx.stroke();
 
   return c;
@@ -149,19 +148,15 @@ export function GlobeCanvas({
   hqRef,
   pinRef,
   resetSignal,
-  target = null,
 }: {
   onPin: (p: Pin | null) => void;
   hqRef: React.RefObject<HTMLDivElement | null>;
   pinRef: React.RefObject<HTMLDivElement | null>;
   resetSignal: number;
-  /** a place to fly to and mark (the scroll journey); null = rest at the studio */
-  target?: Pin | null;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const lenis = useLenis();
-  const api = useRef<{ focus: (lat: number, lon: number) => void; setPin: (p: Pin | null) => void; fly: (t: Pin | null) => void } | null>(null);
-  const targetRef = useRef<Pin | null>(target);
+  const api = useRef<{ focus: (lat: number, lon: number) => void; setPin: (p: Pin | null) => void } | null>(null);
   const lenisRef = useRef(lenis);
   useEffect(() => {
     lenisRef.current = lenis;
@@ -171,10 +166,6 @@ export function GlobeCanvas({
     if (resetSignal > 0) api.current?.focus(HQ.lat, HQ.lon);
   }, [resetSignal]);
 
-  useEffect(() => {
-    targetRef.current = target;
-    api.current?.fly(target);
-  }, [target]);
 
   useEffect(() => {
     const el = host.current;
@@ -203,16 +194,16 @@ export function GlobeCanvas({
 
     // view state: rotation about Y (lon) and X (lat tilt)
     const view = { ry: 0, rx: 0, vy: 0, vx: 0 };
-    // Euler order is YXZ (tilt about X first, then spin about Y). Tilt partway to the
-    // latitude, then solve the spin that brings the point's x to zero.
+    // Euler order is XYZ (spin about the globe's own axis, then tilt the whole globe toward
+    // us). Spin brings the point's x to zero; the tilt is partway to its latitude so the
+    // place sits just above centre with north up, like a globe on a desk.
     const focusAngles = (lat: number, lon: number) => {
       const v = toVec(lat, lon);
       const rx = rad(lat) * 0.6;
-      const zp = v.y * Math.sin(rx) + v.z * Math.cos(rx);
-      return { ry: Math.atan2(-v.x, zp), rx };
+      return { ry: Math.atan2(-v.x, v.z), rx };
     };
     const start = focusAngles(HQ.lat, HQ.lon);
-    view.ry = start.ry + 0.5;
+    view.ry = start.ry;
     view.rx = start.rx;
 
     let pin: Pin | null = null;
@@ -238,6 +229,7 @@ export function GlobeCanvas({
       const texture = new Texture(gl, { image: canvas, generateMipmaps: true, minFilter: gl.LINEAR_MIPMAP_LINEAR, anisotropy: perf.lite ? 4 : 8 });
       const program = new Program(gl, { vertex, fragment, uniforms: { tMap: { value: texture } } });
       const mesh = new Mesh(gl, { geometry: new Sphere(gl, { radius: 1, widthSegments: 96, heightSegments: 64 }), program });
+      mesh.rotation.order = "XYZ"; // spin about the globe's own upright axis first, then tilt the whole globe toward us
       mesh.setParent(scene);
 
       const tmp = new Vec3();
@@ -271,11 +263,11 @@ export function GlobeCanvas({
           view.rx += view.vx;
           view.vy *= 0.94;
           view.vx *= 0.94;
-          if (!reduce && !state.hover && !targetRef.current) view.ry += 0.0016 + Math.min(Math.abs(lv), 30) * 0.0006;
+          if (!reduce && !state.hover) view.ry -= 0.0007 + Math.min(Math.abs(lv), 30) * 0.0004;
         }
         view.rx = Math.max(-1.1, Math.min(1.1, view.rx));
         mesh.rotation.y = view.ry;
-        mesh.rotation.x = -view.rx; // engine X-rotation is opposite to screen intuition
+        mesh.rotation.x = view.rx; // north toward the viewer for positive tilt (order XYZ)
         mesh.updateMatrixWorld();
         renderer.render({ scene, camera });
         place(hqRef.current, hq);
@@ -371,17 +363,7 @@ export function GlobeCanvas({
             pinRef.current.style.visibility = "hidden";
           }
         },
-        fly: (t) => {
-          if (t) {
-            api.current?.focus(t.lat, t.lon);
-            pin = t;
-          } else {
-            api.current?.focus(HQ.lat, HQ.lon);
-            api.current?.setPin(null);
-          }
-        },
       };
-      if (targetRef.current) api.current.fly(targetRef.current);
     })();
 
     return () => {
