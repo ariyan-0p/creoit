@@ -340,3 +340,23 @@ html.menu-open {
 :root {
   --footer-h: max(100svh, 40rem);
 }
+
+/* hero orb: a slow float (transform only, GPU) */
+@keyframes hero-orb-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-14px) scale(1.03);
+  }
+}
+.hero-orb-float {
+  animation: hero-orb-float 9s ease-in-out infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb-float {
+    animation: none;
+  }
+}

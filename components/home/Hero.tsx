@@ -46,6 +46,7 @@ export function Hero() {
   const inner = useRef<HTMLDivElement>(null);
   const sharp = useRef<HTMLSpanElement>(null);
   const soft = useRef<HTMLSpanElement>(null);
+  const orb = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = root.current;
@@ -55,6 +56,7 @@ export function Hero() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const lens = { x: 0, y: 0, r: 0, tx: 0, ty: 0 };
     let on = false;
+    const orbPos = { x: 0, y: 0 };
 
     // ---- entrance (waits for the preloader curtain) ----
     // Built inside a gsap.context so React's dev double-mount reverts cleanly.
@@ -65,6 +67,7 @@ export function Hero() {
         .from(".hero-bg", { scale: 1.22, duration: 2.2, ease: "expo.out" }, 0)
         .from(".hero-line", { yPercent: 108, duration: 1.3, ease: "expo.out", stagger: 0.1 })
         .from(".hero-rem", { yPercent: 108, rotate: 3, duration: 1.4, ease: "expo.out" }, 0.25)
+        .from(".hero-orb-in", { scale: 0.55, opacity: 0, duration: 2.4, ease: "expo.out" }, 0.2)
         .from(".hero-fade", { opacity: 0, y: 18, duration: 1, ease: "power3.out", stagger: 0.08 }, 0.5)
         .add(() => {
           on = true;
@@ -115,6 +118,15 @@ export function Hero() {
       lens.ty = py - rect.top;
       lens.x += (lens.tx - lens.x) * 0.14;
       lens.y += (lens.ty - lens.y) * 0.14;
+      if (!reduce && orb.current) {
+        // the orb drifts a little against the pointer (or on its own without one): depth
+        const ox = (useReal ? -pointer.nx : Math.sin(t * 0.35) * 0.5) * 38;
+        const oy = (useReal ? -pointer.ny : Math.cos(t * 0.3) * 0.4) * 26;
+        orbPos.x += (ox - orbPos.x) * 0.06;
+        orbPos.y += (oy - orbPos.y) * 0.06;
+        orb.current.style.setProperty("--ox", `${orbPos.x.toFixed(1)}px`);
+        orb.current.style.setProperty("--oy", `${orbPos.y.toFixed(1)}px`);
+      }
       const R = Math.max(170, Math.min(window.innerWidth * 0.17, 280)) * lens.r;
       const m = reduce ? "100% 100%" : "";
       const s = sharp.current;
@@ -153,6 +165,34 @@ export function Hero() {
               "radial-gradient(60% 55% at 78% 88%, rgba(106,61,255,0.42) 0%, rgba(106,61,255,0) 70%), radial-gradient(45% 45% at 12% 12%, rgba(20,0,33,0.9) 0%, rgba(20,0,33,0) 100%)",
           }}
         />
+        {/* a glowing glass orb in the middle: behind the headline, in front of nothing but the bokeh */}
+        <div
+          ref={orb}
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-[46%] aspect-square w-[min(46vw,64svh)] max-md:top-[41%] max-md:w-[min(76vw,44svh)]"
+          style={{ transform: "translate3d(calc(-50% + var(--ox, 0px)), calc(-50% + var(--oy, 0px)), 0)" }}
+        >
+          <div className="hero-orb-in absolute inset-0">
+            <div className="hero-orb-float absolute inset-0">
+              <div
+                className="absolute -inset-[34%] rounded-full"
+                style={{ background: "radial-gradient(circle, rgba(106,61,255,0.5) 0%, rgba(106,61,255,0.17) 38%, rgba(106,61,255,0) 66%)" }}
+              />
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background:
+                    "radial-gradient(circle at 31% 27%, rgba(255,255,255,0.75) 0%, rgba(197,181,255,0.5) 13%, rgba(122,84,255,0.4) 38%, rgba(48,16,120,0.5) 68%, rgba(20,0,33,0.72) 100%)",
+                  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.22), inset 0 -3.2rem 5.5rem rgba(20,0,33,0.6), 0 0 7rem rgba(106,61,255,0.35)",
+                }}
+              />
+              <div
+                className="absolute left-[20%] top-[13%] h-[13%] w-[30%] -rotate-[28deg] rounded-full"
+                style={{ background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.5), rgba(255,255,255,0))" }}
+              />
+            </div>
+          </div>
+        </div>
         <Bokeh className="absolute inset-0" />
         </div>
 
