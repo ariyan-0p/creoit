@@ -1,6 +1,5 @@
 import { Hero } from "@/components/home/Hero";
 import { Manifesto } from "@/components/home/Manifesto";
-import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { TrustedBy } from "@/components/home/TrustedBy";
 import { Lenses } from "@/components/home/Lenses";
 import { Team } from "@/components/home/Team";
@@ -15,7 +14,6 @@ export default function HomePage() {
     <div className="relative">
       <Hero />
       <Manifesto />
-      <ServicesGrid />
       <TrustedBy />
       <Lenses />
       <Team />
