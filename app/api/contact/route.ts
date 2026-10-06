@@ -7,7 +7,7 @@
  * SMTP is configured through environment variables:
  *
  *   SMTP_HOST, SMTP_PORT (465 = TLS), SMTP_USER, SMTP_PASS
- *   CONTACT_TO   (where briefs go, default hello@creoit.in)
+ *   CONTACT_TO   (where briefs go, default team@creoit.in)
  *   CONTACT_FROM (sender, default = SMTP_USER)
  *   CONTACT_DIR  (storage folder, default /var/lib/creoit, else ./data)
  */
@@ -54,7 +54,7 @@ async function mail(b: Record<string, string>) {
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return false;
   const port = Number(process.env.SMTP_PORT ?? 465);
   const t = nodemailer.createTransport({ host: SMTP_HOST, port, secure: port === 465, auth: { user: SMTP_USER, pass: SMTP_PASS } });
-  const to = process.env.CONTACT_TO ?? "hello@creoit.in";
+  const to = process.env.CONTACT_TO ?? "team@creoit.in";
   await t.sendMail({
     from: `"CREOIT website" <${process.env.CONTACT_FROM ?? SMTP_USER}>`,
     to,

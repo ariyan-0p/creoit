@@ -15,4 +15,4 @@ export const SOCIALS = [
   { label: "Facebook", href: "https://facebook.com/creoit" },
 ] as const;
 
-export const EMAIL = "hello@creoit.in";
+export const EMAIL = "team@creoit.in";
