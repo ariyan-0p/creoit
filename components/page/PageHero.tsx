@@ -31,13 +31,6 @@ export function PageHero({
         }}
       />
 
-      <div className="pointer-events-none absolute inset-x-[var(--pad)] bottom-[var(--pad)] top-[5.6rem] text-paper/40" aria-hidden>
-        <i className="vf vf-tl" />
-        <i className="vf vf-tr" />
-        <i className="vf vf-bl" />
-        <i className="vf vf-br" />
-      </div>
-
       <div className="relative z-10 md:px-5">
         <p className="mono mb-8 flex items-center gap-4 text-paper/70" data-reveal>
           <i className="rec" />

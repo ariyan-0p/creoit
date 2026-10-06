@@ -46,7 +46,6 @@ export function Hero() {
   const inner = useRef<HTMLDivElement>(null);
   const sharp = useRef<HTMLSpanElement>(null);
   const soft = useRef<HTMLSpanElement>(null);
-  const timecode = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = root.current;
@@ -67,7 +66,6 @@ export function Hero() {
         .from(".hero-line", { yPercent: 108, duration: 1.3, ease: "expo.out", stagger: 0.1 })
         .from(".hero-rem", { yPercent: 108, rotate: 3, duration: 1.4, ease: "expo.out" }, 0.25)
         .from(".hero-fade", { opacity: 0, y: 18, duration: 1, ease: "power3.out", stagger: 0.08 }, 0.5)
-        .from(".hero-vf", { opacity: 0, scale: 1.04, duration: 1.4, ease: "expo.out" }, 0.2)
         .add(() => {
           on = true;
         }, 0.2)
@@ -126,12 +124,6 @@ export function Hero() {
         s.style.setProperty("--r", reduce ? "4000px" : `${R}px`);
         if (m) s.style.setProperty("--r", "4000px");
       }
-      if (timecode.current) {
-        const f = Math.floor(t * 24);
-        const sec = Math.floor(t) % 60;
-        const min = Math.floor(t / 60) % 60;
-        timecode.current.textContent = `00:${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}:${String(f % 24).padStart(2, "0")}`;
-      }
     };
     gsap.ticker.add(frame);
 
@@ -173,18 +165,6 @@ export function Hero() {
               "radial-gradient(120% 90% at 30% 55%, rgba(10,10,11,0) 0%, rgba(10,10,11,0.55) 70%, rgba(10,10,11,0.92) 100%)",
           }}
         />
-
-        {/* viewfinder frame */}
-        <div className="hero-vf pointer-events-none absolute inset-x-[var(--pad)] bottom-[var(--pad)] top-[var(--vf-top)] text-paper/55" aria-hidden>
-          <i className="vf vf-tl" />
-          <i className="vf vf-tr" />
-          <i className="vf vf-bl" />
-          <i className="vf vf-br" />
-          <span className="mono absolute left-4 top-3 hidden items-center gap-2 sm:flex">
-            <i className="rec" /> Rec <span ref={timecode} className="tabular-nums">00:00:00:00</span>
-          </span>
-          <span className="mono absolute right-4 top-3 hidden sm:block">ISO 800 · f/1.4 · 24fps</span>
-        </div>
 
         {/* content */}
         <div className="absolute inset-0 flex flex-col justify-end px-[var(--pad-in)] pb-[var(--pad-bottom)] pt-[clamp(7rem,15svh,9rem)] max-md:justify-between max-md:gap-4 max-md:pb-[4.5rem] max-md:pt-[6rem] [@media(orientation:portrait)_and_(max-width:1023px)]:justify-between [@media(orientation:portrait)_and_(max-width:1023px)]:gap-4">
