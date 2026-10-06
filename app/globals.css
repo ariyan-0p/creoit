@@ -201,8 +201,12 @@ canvas {
   color: var(--color-paper);
   transition: color 0.45s var(--ease);
 }
-.nav-logo {
-  transition: filter 0.45s var(--ease);
+.nav-logo-w,
+.nav-logo-d {
+  transition: opacity 0.45s var(--ease);
+}
+.nav-logo-d {
+  opacity: 0;
 }
 .nav-btn {
   border: 1px solid color-mix(in srgb, currentColor 55%, transparent);
@@ -219,8 +223,11 @@ canvas {
 html[data-nav-theme="light"] .nav-fg {
   color: var(--color-ink);
 }
-html[data-nav-theme="light"] .nav-logo {
-  filter: invert(1);
+html[data-nav-theme="light"] .nav-logo-w {
+  opacity: 0;
+}
+html[data-nav-theme="light"] .nav-logo-d {
+  opacity: 1;
 }
 html[data-nav-theme="light"] {
   --nav-inv: var(--color-paper);
@@ -228,8 +235,11 @@ html[data-nav-theme="light"] {
 html.menu-open .nav-fg {
   color: var(--color-paper);
 }
-html.menu-open .nav-logo {
-  filter: none;
+html.menu-open .nav-logo-w {
+  opacity: 1;
+}
+html.menu-open .nav-logo-d {
+  opacity: 0;
 }
 html.menu-open {
   --nav-inv: var(--color-ink);

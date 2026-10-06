@@ -137,8 +137,13 @@ export function Nav() {
         className="nav-fg pointer-events-none fixed inset-x-0 top-0 z-[160] flex items-center justify-between px-[var(--pad)] pt-5"
       >
         <Link href="/" aria-label="CREOIT — home" className="pointer-events-auto block" data-cursor="Home">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo/creoit-logo-white.png" alt="CREOIT" width={1175} height={442} className="nav-logo h-11 w-auto" style={{ width: "auto" }} />
+          {/* two real logo files, cross-faded by the nav theme: white over dark sections, dark over light */}
+          <span className="nav-logo grid">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/logo/creoit-nav-white.png" alt="CREOIT" width={720} height={222} className="nav-logo-w col-start-1 row-start-1 h-9 w-auto" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/logo/creoit-nav-dark.png" alt="" aria-hidden width={720} height={222} className="nav-logo-d col-start-1 row-start-1 h-9 w-auto" />
+          </span>
         </Link>
 
         <div className="mono pointer-events-none hidden items-center gap-3 md:flex">
