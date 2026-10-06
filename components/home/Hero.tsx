@@ -112,7 +112,7 @@ export function Hero() {
             </p>
           </div>
 
-          <div className="hero-fade flex flex-wrap items-center gap-3">
+          <div className="hero-fade flex flex-wrap items-center justify-center gap-3">
             <Magnetic>
               <Pill href="/contact" tone="signal" cursor="Talk">
                 Start a project
