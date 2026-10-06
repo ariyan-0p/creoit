@@ -140,11 +140,8 @@ export function Team() {
               >
                 <div aria-hidden className="tm-dim pointer-events-none absolute inset-0 z-20 bg-ink opacity-0" />
 
-                {/* phone-only details: a big faint numeral and a dot indicator showing which of the four you're on */}
-                <span aria-hidden className="display pointer-events-none absolute right-[var(--pad)] top-[5.4rem] text-[34vw] leading-none opacity-[0.07] md:hidden">
-                  0{i + 1}
-                </span>
-                <div aria-hidden className="absolute right-3 top-1/2 flex -translate-y-1/2 flex-col gap-2 md:hidden">
+                {/* a dot indicator showing which of the four you're on (stacked layouts) */}
+                <div aria-hidden className="absolute right-3 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-2 lg:hidden">
                   {MEMBERS.map((_, k) => (
                     <i key={k} className={`block w-1.5 rounded-full bg-current ${k === i ? "h-5" : "h-1.5 opacity-30"}`} />
                   ))}
@@ -157,7 +154,7 @@ export function Team() {
                   </span>
                 </div>
 
-                <div className="grid items-end gap-4 md:grid-cols-[minmax(0,44rem)_auto] md:justify-center md:gap-x-[clamp(3rem,7vw,8rem)]">
+                <div className="flex min-h-0 flex-1 flex-col gap-4 pt-4 lg:grid lg:flex-none lg:grid-cols-[minmax(0,44rem)_auto] lg:items-end lg:justify-center lg:gap-x-[clamp(3rem,6vw,7rem)] lg:pt-0">
                   <div>
                     <h3 className="tm-k display max-w-[12ch] text-[clamp(2rem,9.4vw,3.2rem)] leading-[0.95] md:text-[clamp(2.6rem,6.4vw,7rem)]">
                       {hasName ? m.name : m.role}
@@ -197,13 +194,15 @@ export function Team() {
                     </div>
                   </div>
 
-                  {/* portrait first on phones, beside the text on larger screens */}
-                  <div className="order-first md:order-none">
-                    <Portrait
-                      photo={m.photo}
-                      label={hasName ? m.name : m.role}
-                      className={`tm-frame mx-auto aspect-[4/5] h-[min(36svh,70vw)] w-auto rounded-[1.5rem] md:mx-0 md:h-auto md:w-[min(32vw,28rem)] md:max-h-[64svh] md:rounded-[1.75rem] ${th.frame}`}
-                    />
+                  {/* stacked (phones, iPad portrait): the portrait takes all the free height above the text. side by side from lg, and big */}
+                  <div className="relative order-first min-h-[26svh] flex-1 lg:order-none lg:min-h-0 lg:flex-none [@media(max-height:560px)]:h-[78svh]">
+                    <div className="absolute inset-0 lg:static">
+                      <Portrait
+                        photo={m.photo}
+                        label={hasName ? m.name : m.role}
+                        className={`tm-frame h-full w-full rounded-[1.5rem] lg:aspect-[4/5] lg:h-auto lg:w-[min(36vw,34rem)] lg:max-h-[72svh] lg:rounded-[1.75rem] ${th.frame}`}
+                      />
+                    </div>
                   </div>
                 </div>
               </article>

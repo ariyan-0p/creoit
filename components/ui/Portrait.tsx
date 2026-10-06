@@ -20,7 +20,7 @@ export function Portrait({
     return (
       <div className={`relative overflow-hidden ${className}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={photo} alt={label} className="pt-img absolute inset-0 h-full w-full object-cover" />
+        <img src={photo} alt={label} className="pt-img absolute inset-0 h-full w-full object-cover object-[50%_22%]" />
       </div>
     );
   }
