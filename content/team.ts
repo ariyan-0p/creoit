@@ -1,45 +1,68 @@
 /**
  * Team Members Content — content/team.ts
+ *
+ * Order matters: the first four appear in the home-page deck, all of them on /team.
+ * Photos are cropped 4:5 portraits in public/images/people/. `quote` is optional —
+ * add a real line from the person when they have one.
  */
 
 import type { TeamMember } from "@/types";
 
 export const team: TeamMember[] = [
-  // Add real team members here when provided by the client
   {
-    id: "team-placeholder-1",
-    name: "Team Member",
-    role: "Creative Strategist",
-    bio: "Brings strategy and creativity together to build brands that stand out.",
-    photo: "/images/team/placeholder-1.jpg",
-    quote: "Great work starts with the right question.",
-    craft: ["Brand Strategy","Positioning","Marketing Strategy"],
+    id: "sujal-sharma",
+    name: "Sujal Sharma",
+    role: "Co-Founder",
+    bio: "Sets the direction at CREOIT and stays close to every brand we take on, from the first conversation to the final frame.",
+    photo: "/images/people/sujal-sharma.jpg",
+    craft: ["Vision & Direction", "Brand Strategy", "Client Partnerships"],
   },
   {
-    id: "team-placeholder-2",
-    name: "Team Member",
-    role: "Content Director",
-    bio: "Creates content that earns attention and keeps it.",
-    photo: "/images/team/placeholder-2.jpg",
-    quote: "Stop the scroll. Tell the story.",
-    craft: ["Photography","Videography","Reels & Films","Creative Campaigns"],
+    id: "rohit-prajapati",
+    name: "Rohit Prajapati",
+    role: "Co-Founder",
+    bio: "Builds the studio with Sujal and turns ambitious ideas into work that holds up in the real world.",
+    photo: "/images/people/rohit-prajapati.jpg",
+    craft: ["Growth", "Marketing Strategy", "Leadership"],
   },
   {
-    id: "team-placeholder-3",
-    name: "Team Member",
-    role: "Brand Designer",
-    bio: "Translates strategy into visual identities that feel unmistakably right.",
-    photo: "/images/team/placeholder-3.jpg",
-    quote: "Design is the silent ambassador of your brand.",
-    craft: ["Brand Identity","Visual Identity"],
+    id: "vaishali-mankar",
+    name: "Vaishali Mankar",
+    role: "Operations Manager",
+    bio: "Keeps every project moving: schedules, shoots, teams and deliveries, so the creative work reaches the client on time.",
+    photo: "/images/people/vaishali-mankar.jpg",
+    craft: ["Project Management", "Production Planning", "Client Coordination"],
   },
   {
-    id: "team-placeholder-4",
-    name: "Team Member",
+    id: "aman-kumar",
+    name: "Aman Kumar",
     role: "Performance Marketer",
-    bio: "Turns ad budgets into measurable business results.",
-    photo: "/images/team/placeholder-4.jpg",
-    quote: "Creativity is the weapon. Data is the aim.",
-    craft: ["Meta Ads","Google Ads","Lead Generation"],
+    bio: "Turns ad budgets into measurable business results, testing, learning and scaling what works.",
+    photo: "/images/people/aman-kumar.jpg",
+    craft: ["Meta Ads", "Google Ads", "Lead Generation"],
+  },
+  {
+    id: "aditiya-meena",
+    name: "Aditiya Meena",
+    role: "Content Director & DOP",
+    bio: "Leads everything we put in front of a camera, and lights, frames and shoots it too. Content that earns attention and keeps it.",
+    photo: "/images/people/aditiya-meena.jpg",
+    craft: ["Cinematography", "Photography", "Reels & Films", "Creative Campaigns"],
+  },
+  {
+    id: "akshay-upadhyay",
+    name: "Akshay Upadhyay",
+    role: "Social Media Executive",
+    bio: "Runs the day-to-day of our clients' social channels: planning, posting and showing up where their audience is.",
+    photo: "/images/people/akshay-upadhyay.jpg",
+    craft: ["Social Media", "Content Calendars", "Community"],
+  },
+  {
+    id: "sushant-mehnlode",
+    name: "Sushant Balveersingh Mehnlode",
+    role: "Video Editor",
+    bio: "Cuts raw footage into films and reels with rhythm: the edit that makes people stop scrolling and watch.",
+    photo: "/images/people/sushant-mehnlode.jpg",
+    craft: ["Video Editing", "Reels & Films", "Motion"],
   },
 ];

@@ -32,7 +32,7 @@ export default function TeamPage() {
       <section data-nav="light" className="relative bg-paper px-[var(--pad)] py-[clamp(4rem,9vw,8rem)] text-ink">
         <p className="mono mb-10 flex justify-between text-ink/55" data-reveal>
           <span>{team.length} people</span>
-          <span className="hidden sm:block">Names and portraits arriving soon</span>
+          <span className="hidden sm:block">Bhopal, India</span>
         </p>
 
         <ul className="grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">

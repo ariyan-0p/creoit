@@ -108,7 +108,7 @@ export function Team() {
       <div data-nav="light" className="tm-intro bg-paper px-[var(--pad)] pb-[clamp(3.5rem,7vw,6rem)] pt-[clamp(5rem,9vw,8rem)] text-ink">
         <p className="mono tm-intro-in mb-8 flex items-center justify-between text-ink/55">
           <span>[ 03 ] The team</span>
-          <span className="hidden sm:block">{MEMBERS.length} of us, up close</span>
+          <span className="hidden sm:block">{team.length} of us, up close</span>
         </p>
         <h2 id="team-title" className="tm-intro-in display max-w-[17ch] text-[clamp(2.4rem,6.6vw,7.2rem)] leading-[0.97]">
           Different people. Different skills. <span className="serif-i text-[1.08em] text-signal">One direction.</span>
