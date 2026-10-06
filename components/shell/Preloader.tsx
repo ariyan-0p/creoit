@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Preloader — just the real CREOIT logo on white. The script "creo" writes itself
- * on, the bold "it" rises in; the dot of the i is a round ticker that flips through
- * our social icons, then settles into a plain round purple dot. The full stop is a
+ * Preloader — just the real CREOIT logo on white. Two moves: (1) the whole word
+ * "creoit" rises in from below as one piece; (2) the dot of the i is a round ticker
+ * that flips through our social icons, then settles into a plain round purple dot. The full stop is a
  * matching round dot. (The logo art is cut into two files with both dots removed:
  * public/images/logo/pl-script.png and pl-it.png.)
  *
@@ -77,10 +77,13 @@ export function Preloader() {
         (window as unknown as { __plTl?: gsap.core.Timeline }).__plTl = tl;
       }
 
-      // the script "creo" writes itself on, left to right; the bold "it" rises in after it
-      tl.to(".pl-script", { clipPath: "inset(-12% 0% -12% 0%)", duration: 1.5, ease: "power2.inOut" }, 0.15)
-        .to(".pl-it", { y: 0, duration: 1.2, ease: "expo.out" }, 1.0)
-        .fromTo(stop.current, { scale: 0 }, { scale: 1, duration: 0.6, ease: "back.out(2.4)" }, 1.3);
+      // 1) the whole word rises from below as one piece (the full stop pops in as it lands)
+      tl.to(".pl-logo", { y: 0, duration: 1.4, ease: "expo.out" }, 0.15).fromTo(
+        stop.current,
+        { scale: 0 },
+        { scale: 1, duration: 0.6, ease: "back.out(2.4)" },
+        1.0
+      );
 
       // round ticker pops in as the i's dot, flips fast through the icons
       tl.fromTo(tile.current, { scale: 0, opacity: 0, yPercent: -25 }, { scale: 1, opacity: 1, yPercent: -25, duration: 0.6, ease: "back.out(2)" }, 1.05);
@@ -177,19 +180,21 @@ export function Preloader() {
   return (
     <div ref={root} id="preloader" aria-hidden="true" className="fixed inset-0 z-[200]">
       <style>{`
-        .pl-script{clip-path:inset(-12% 100% -12% 0%)}
-        .pl-it{transform:translateY(118%)}
+        .pl-logo{transform:translateY(118%)}
         .pl-stop{transform:scale(0)}
       `}</style>
 
       <div ref={sheet} className="absolute inset-0 grid place-items-center bg-paper px-[var(--pad)] text-ink">
         {/* the real logo: script + it, with the two dots drawn here so they can be round */}
         <div className="relative" style={{ width: "min(80vw, 60rem)", aspectRatio: "1762 / 542" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo/pl-script.png" alt="" className="pl-script absolute left-0 top-0 h-full" style={{ width: `${SCRIPT_W}%` }} />
-          <div className="absolute top-0 h-full overflow-hidden" style={{ left: `${SCRIPT_W - JOIN}%`, width: `${100 - SCRIPT_W}%` }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/pl-it.png" alt="" className="pl-it block h-full w-full" />
+          {/* the word rises as one piece from behind a mask at the logo's own edges */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="pl-logo absolute inset-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/logo/pl-script.png" alt="" className="absolute left-0 top-0 h-full" style={{ width: `${SCRIPT_W}%` }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/logo/pl-it.png" alt="" className="absolute top-0 h-full" style={{ left: `${SCRIPT_W - JOIN}%`, width: `${100 - SCRIPT_W}%` }} />
+            </div>
           </div>
 
           {/* the ticker: a round badge where the dot of the i sits */}
