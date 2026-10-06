@@ -1,9 +1,11 @@
 "use client";
 
 /**
- * Preloader — just the wordmark. "creoit." rises letter by letter on white; the
- * dot of the i is a round ticker that flips through our social icons, then
- * settles into a plain round purple dot. The full stop is a matching round dot.
+ * Preloader — just the real CREOIT logo on white. The script "creo" writes itself
+ * on, the bold "it" rises in; the dot of the i is a round ticker that flips through
+ * our social icons, then settles into a plain round purple dot. The full stop is a
+ * matching round dot. (The logo art is cut into two files with both dots removed:
+ * public/images/logo/pl-script.png and pl-it.png.)
  *
  * Exit: that dot is the lens. Purple floods out of it and swallows the page,
  * then an iris opens from the same point and reveals the site underneath
@@ -26,22 +28,15 @@ const ICONS = [
   { src: "/images/linkedin%20(1).png", alt: "LinkedIn" },
 ];
 
-/** "ı" is a dotless i — the ticker supplies its dot. The final stop is a round CSS dot, not a glyph. */
-const WORD: { ch: string; cls: string }[] = [
-  { ch: "c", cls: "pl-serif" },
-  { ch: "r", cls: "pl-serif" },
-  { ch: "e", cls: "pl-serif" },
-  { ch: "o", cls: "pl-serif" },
-  { ch: "ı", cls: "pl-sans pl-i" },
-  { ch: "t", cls: "pl-sans" },
-  { ch: "", cls: "pl-stop" },
-];
+/** logo geometry: the art is 1762x542; the i dot centre is at (75.6%, 6.7%), the full stop at (97.8%, 92.8%) */
+const SCRIPT_W = (1277 / 1762) * 100;
 
 export function Preloader() {
   const root = useRef<HTMLDivElement>(null);
   const sheet = useRef<HTMLDivElement>(null);
   const curtain = useRef<HTMLDivElement>(null);
   const tile = useRef<HTMLDivElement>(null);
+  const stop = useRef<HTMLDivElement>(null);
   const [gone, setGone] = useState(false);
   const lenis = useLenis();
 
@@ -80,11 +75,13 @@ export function Preloader() {
         (window as unknown as { __plTl?: gsap.core.Timeline }).__plTl = tl;
       }
 
-      // wordmark rises letter by letter
-      tl.to(".pl-ch", { y: 0, duration: 1.5, ease: "expo.out", stagger: 0.09 }, 0.15);
+      // the script "creo" writes itself on, left to right; the bold "it" rises in after it
+      tl.to(".pl-script", { clipPath: "inset(-12% 0% -12% 0%)", duration: 1.5, ease: "power2.inOut" }, 0.15)
+        .to(".pl-it", { y: 0, duration: 1.2, ease: "expo.out" }, 1.0)
+        .fromTo(stop.current, { scale: 0 }, { scale: 1, duration: 0.6, ease: "back.out(2.4)" }, 1.3);
 
       // round ticker pops in as the i's dot, flips fast through the icons
-      tl.fromTo(tile.current, { scale: 0, opacity: 0, yPercent: -25 }, { scale: 1, opacity: 1, yPercent: -25, duration: 0.6, ease: "back.out(2)" }, 0.95);
+      tl.fromTo(tile.current, { scale: 0, opacity: 0, yPercent: -25 }, { scale: 1, opacity: 1, yPercent: -25, duration: 0.6, ease: "back.out(2)" }, 1.05);
       const FLIP = 0.2;
       const flips = 7;
       for (let k = 0; k < flips; k++) {
@@ -102,7 +99,7 @@ export function Preloader() {
       // the icons fade and the ticker settles into a round purple dot, the twin of the full stop
       tl.to(icons, { opacity: 0, duration: 0.2, ease: "none" }, settle).to(
         tile.current,
-        { scale: 0.53, yPercent: 0, duration: 0.7, ease: "elastic.out(1, 0.5)" },
+        { scale: 0.47, yPercent: 0, duration: 0.7, ease: "elastic.out(1, 0.5)" },
         settle + 0.05
       );
 
@@ -178,44 +175,38 @@ export function Preloader() {
   return (
     <div ref={root} id="preloader" aria-hidden="true" className="fixed inset-0 z-[200]">
       <style>{`
-        .pl-ch{display:inline-block;transform:translateY(118%)}
-        .pl-serif{font-family:var(--font-fraunces),Georgia,serif;font-style:italic;font-weight:600;font-optical-sizing:auto}
-        .pl-sans{font-family:var(--font-clash),'Helvetica Neue',sans-serif;font-weight:600}
-        .pl-stop{width:.16em;height:.16em;margin-left:.06em;border-radius:50%;background:var(--color-signal)}
+        .pl-script{clip-path:inset(-12% 100% -12% 0%)}
+        .pl-it{transform:translateY(118%)}
+        .pl-stop{transform:scale(0)}
       `}</style>
 
       <div ref={sheet} className="absolute inset-0 grid place-items-center bg-paper px-[var(--pad)] text-ink">
-        <div className="relative flex items-baseline leading-[1] tracking-[-0.03em]" style={{ fontSize: "min(34vw, 28rem)" }}>
-          {WORD.map((w, i) => {
-            const isI = w.cls.includes("pl-i");
-            return (
-              <span key={i} className="relative inline-block">
-                <span className="mask-line -mx-[0.04em] block px-[0.04em]">
-                  <span className={`pl-ch ${w.cls}`}>{w.ch}</span>
-                </span>
-                {isI && (
-                  /* the ticker: a round badge where the dot of the i would be */
-                  <div
-                    ref={tile}
-                    className="absolute left-1/2 top-[0.03em] aspect-square w-[0.3em] -translate-x-1/2 overflow-hidden rounded-full bg-signal opacity-0 shadow-[0_0_0_0.035em_rgba(106,61,255,0.18)]"
-                  >
-                    {ICONS.map((ic) => (
-                      /* each slot is the FULL badge, so sliding ±100% moves the neighbour completely out of view */
-                      <div key={ic.alt} className="pl-icon absolute inset-0 grid place-items-center">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={ic.src}
-                          alt=""
-                          className="h-[50%] w-[50%] object-contain"
-                          style={{ filter: "brightness(0) invert(1)" }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </span>
-            );
-          })}
+        {/* the real logo: script + it, with the two dots drawn here so they can be round */}
+        <div className="relative" style={{ width: "min(80vw, 60rem)", aspectRatio: "1762 / 542" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/logo/pl-script.png" alt="" className="pl-script absolute left-0 top-0 h-full" style={{ width: `${SCRIPT_W}%` }} />
+          <div className="absolute top-0 h-full overflow-hidden" style={{ left: `${SCRIPT_W}%`, width: `${100 - SCRIPT_W}%` }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/logo/pl-it.png" alt="" className="pl-it block h-full w-full" />
+          </div>
+
+          {/* the ticker: a round badge where the dot of the i sits */}
+          <div
+            ref={tile}
+            className="absolute aspect-square overflow-hidden rounded-full bg-signal opacity-0 shadow-[0_0_0_0.5vw_rgba(106,61,255,0.18)]"
+            style={{ left: "70.9%", top: "-8.5%", width: "9.4%" }}
+          >
+            {ICONS.map((ic) => (
+              /* each slot is the FULL badge, so sliding ±100% moves the neighbour completely out of view */
+              <div key={ic.alt} className="pl-icon absolute inset-0 grid place-items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={ic.src} alt="" className="h-[50%] w-[50%] object-contain" style={{ filter: "brightness(0) invert(1)" }} />
+              </div>
+            ))}
+          </div>
+
+          {/* the full stop: a round purple dot, the twin of the settled ticker */}
+          <div ref={stop} className="pl-stop absolute aspect-square rounded-full bg-signal" style={{ left: "95.7%", top: "85.9%", width: "4.3%" }} />
         </div>
       </div>
 
