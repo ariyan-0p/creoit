@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * Hero — simple and bold.
- * "We create what people" in big type, "remember." pushed to the right
+ * Hero — simple and bold, out of focus until it matters.
+ * "We create what people" in big type that sits soft until a lens following the
+ * pointer (idle / touch: it drifts on its own) brings it into focus, "remember." pushed to the right
  * underneath it, the short paragraph tucked in the empty space to its left, and
  * the call to action below. The page then slides over this hero (it is
  * position: sticky).
@@ -11,7 +12,7 @@
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { gsap } from "@/lib/gsap";
-import { bindPointer } from "@/lib/pointer";
+import { bindPointer, pointer } from "@/lib/pointer";
 import { onReady } from "@/lib/ready";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { Pill } from "@/components/ui/Pill";
@@ -21,14 +22,39 @@ const Bokeh = dynamic(() => import("./Bokeh").then((m) => m.Bokeh), { ssr: false
 
 const LINES = ["We create", "what people"] as const;
 
+/** the first headline line, as mask-lines (phones: one word per line; md: two lines; lg+: one line) */
+function Line1() {
+  return (
+    <>
+      {LINES.map((l) => (
+        <span key={l} className="mask-line block">
+          <span className="hero-line block">
+            {l.split(" ").map((w, i) => (
+              <span key={w} className="block md:inline">
+                {i > 0 && <span className="hidden md:inline"> </span>}
+                {w}
+              </span>
+            ))}
+          </span>
+        </span>
+      ))}
+    </>
+  );
+}
+
 export function Hero() {
   const root = useRef<HTMLElement>(null);
   const inner = useRef<HTMLDivElement>(null);
+  const sharp = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = root.current;
     if (!el) return;
     bindPointer();
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lens = { x: 0, y: 0, r: 0, tx: 0, ty: 0 };
+    let on = false;
 
     // The entrance waits for the preloader. Built inside a gsap.context so
     // React's dev double-mount reverts cleanly.
@@ -40,7 +66,11 @@ export function Hero() {
         intro
           .from(".hero-bg", { scale: 1.22, duration: 2.2, ease: "expo.out" }, 0)
           .from(".hero-line", { yPercent: 108, duration: 1.3, ease: "expo.out", stagger: 0.1 }, 0.1)
-          .from(".hero-fade", { opacity: 0, y: 18, duration: 1, ease: "power3.out", stagger: 0.08 }, 0.5);
+          .from(".hero-fade", { opacity: 0, y: 18, duration: 1, ease: "power3.out", stagger: 0.08 }, 0.5)
+          .add(() => {
+            on = true;
+          }, 0.2)
+          .to(lens, { r: 1, duration: 1.6, ease: "expo.out" }, 0.4);
         off = onReady(() => intro.play());
       });
 
@@ -54,8 +84,59 @@ export function Hero() {
       });
     }, el);
 
+    // ---- the lens follows the pointer; mask vars are written straight to the DOM ----
+    const rect = { w: 1, h: 1, left: 0, top: 0 };
+    const measure = () => {
+      const sEl = sharp.current;
+      if (!sEl) return;
+      const b = sEl.getBoundingClientRect();
+      rect.w = b.width;
+      rect.h = b.height;
+      rect.left = b.left;
+      rect.top = b.top;
+    };
+    // measure only when layout can have changed (scroll moves/scales the hero, resize reflows it)
+    let dirty = true;
+    const markDirty = () => (dirty = true);
+    window.addEventListener("scroll", markDirty, { passive: true });
+    window.addEventListener("resize", markDirty);
+
+    const t0 = performance.now();
+    const frame = () => {
+      if (!on || window.scrollY > window.innerHeight * 1.1 || document.hidden) return;
+      if (dirty) {
+        measure();
+        dirty = false;
+      }
+      const t = (performance.now() - t0) / 1000;
+      const useReal = pointer.moved;
+      // No pointer (touch / idle): sweep the lens back and forth across the headline itself.
+      const px = useReal ? pointer.x : rect.left + rect.w * (0.5 + Math.sin(t * 0.7) * 0.5);
+      const py = useReal ? pointer.y : rect.top + rect.h * (0.5 + Math.sin(t * 1.15 + 1) * 0.32);
+      lens.tx = px - rect.left;
+      lens.ty = py - rect.top;
+      lens.x += (lens.tx - lens.x) * 0.14;
+      lens.y += (lens.ty - lens.y) * 0.14;
+      const R = Math.max(170, Math.min(window.innerWidth * 0.17, 280)) * lens.r;
+      const sEl = sharp.current;
+      if (sEl) {
+        sEl.style.setProperty("--mx", `${lens.x}px`);
+        sEl.style.setProperty("--my", `${lens.y}px`);
+        sEl.style.setProperty("--r", `${R}px`);
+      }
+    };
+    if (reduce) {
+      // reduced motion: no lens, the sharp headline is simply fully visible
+      sharp.current?.style.setProperty("--r", "4000px");
+    } else {
+      gsap.ticker.add(frame);
+    }
+
     return () => {
       off();
+      window.removeEventListener("scroll", markDirty);
+      window.removeEventListener("resize", markDirty);
+      gsap.ticker.remove(frame);
       ctx.revert();
     };
   }, []);
@@ -89,20 +170,23 @@ export function Hero() {
               space beside "remember." (below it on narrower screens) */}
           <div className="grid gap-x-10 gap-y-5 lg:grid-cols-[minmax(0,24rem)_1fr] lg:items-center">
             <h1 className="display contents text-[clamp(2.4rem,min(17.3vw,calc((100svh-26rem)/4.6)),6.5rem)] leading-[0.92] tracking-[-0.025em] md:text-[clamp(3rem,min(11vw,17svh),9rem)] lg:text-[clamp(3rem,min(6.7vw,17svh),11rem)]">
-              {/* phones: one word per line (bigger type fills the screen); md: two lines; lg+: one line */}
-              <span className="block lg:col-span-2 lg:flex lg:gap-x-[0.27em]">
-                {LINES.map((l) => (
-                  <span key={l} className="mask-line block">
-                    <span className="hero-line block">
-                      {l.split(" ").map((w, i) => (
-                        <span key={w} className="block md:inline">
-                          {i > 0 && <span className="hidden md:inline"> </span>}
-                          {w}
-                        </span>
-                      ))}
-                    </span>
-                  </span>
-                ))}
+              {/* a soft copy underneath and a sharp copy revealed through the lens on top */}
+              <span className="grid lg:col-span-2">
+                <span aria-hidden className="col-start-1 row-start-1 block select-none text-paper/55 blur-[7px] will-change-transform lg:flex lg:gap-x-[0.27em] [@media(hover:none)]:text-paper/80 [@media(hover:none)]:blur-[2.5px]">
+                  <Line1 />
+                </span>
+                <span
+                  ref={sharp}
+                  className="col-start-1 row-start-1 block text-paper will-change-transform lg:flex lg:gap-x-[0.27em]"
+                  style={{
+                    WebkitMaskImage:
+                      "radial-gradient(circle var(--r, 0px) at var(--mx, 50%) var(--my, 50%), #000 0%, #000 52%, transparent 100%)",
+                    maskImage:
+                      "radial-gradient(circle var(--r, 0px) at var(--mx, 50%) var(--my, 50%), #000 0%, #000 52%, transparent 100%)",
+                  }}
+                >
+                  <Line1 />
+                </span>
               </span>
 
               {/* "remember." pushed to the right, always crisp */}
