@@ -26,6 +26,10 @@ const BUDGETS = ["₹25K – ₹50K", "₹50K – ₹1L", "₹1L – ₹3L", "�
 
 type Errors = Partial<Record<"name" | "company" | "email" | "message", string>>;
 
+// field headings: full-strength ink with a small purple marker, so they read as clear section labels
+const label =
+  "mono text-[0.8rem] font-semibold text-ink before:mr-2.5 before:inline-block before:h-1.5 before:w-1.5 before:rounded-full before:bg-signal before:align-middle";
+
 const field =
   "w-full border-0 border-b border-ink/25 bg-transparent px-0 py-4 text-[1.05rem] text-ink placeholder:text-ink/35 transition-colors duration-500 focus:border-signal focus:outline-none";
 
@@ -147,28 +151,28 @@ export default function ContactClient() {
               <form onSubmit={onSubmit} noValidate className="flex flex-col gap-10">
                 <div className="grid gap-x-10 gap-y-8 md:grid-cols-2">
                   <label data-reveal className="block">
-                    <span className="mono text-ink/55">Your name *</span>
+                    <span className={label}>Your name *</span>
                     <input name="name" type="text" autoComplete="name" placeholder="Full name" className={field} aria-invalid={!!errors.name} />
                     {errors.name && <span className="mono mt-2 block text-signal">{errors.name}</span>}
                   </label>
                   <label data-reveal className="block">
-                    <span className="mono text-ink/55">Company / brand *</span>
+                    <span className={label}>Company / brand *</span>
                     <input name="company" type="text" autoComplete="organization" placeholder="Brand name" className={field} aria-invalid={!!errors.company} />
                     {errors.company && <span className="mono mt-2 block text-signal">{errors.company}</span>}
                   </label>
                   <label data-reveal className="block">
-                    <span className="mono text-ink/55">Email *</span>
+                    <span className={label}>Email *</span>
                     <input name="email" type="email" autoComplete="email" placeholder="you@company.com" className={field} aria-invalid={!!errors.email} />
                     {errors.email && <span className="mono mt-2 block text-signal">{errors.email}</span>}
                   </label>
                   <label data-reveal className="block">
-                    <span className="mono text-ink/55">Phone</span>
+                    <span className={label}>Phone</span>
                     <input name="phone" type="tel" autoComplete="tel" placeholder="Optional" className={field} />
                   </label>
                 </div>
 
                 <fieldset data-reveal>
-                  <legend className="mono mb-4 text-ink/55">I&apos;m interested in</legend>
+                  <legend className={`${label} mb-4`}>I&apos;m interested in</legend>
                   <div className="flex flex-wrap gap-2">
                     {INTERESTS.map((i) => (
                       <button
@@ -187,7 +191,7 @@ export default function ContactClient() {
                 </fieldset>
 
                 <fieldset data-reveal>
-                  <legend className="mono mb-4 text-ink/55">Budget range</legend>
+                  <legend className={`${label} mb-4`}>Budget range</legend>
                   <div className="flex flex-wrap gap-2">
                     {BUDGETS.map((b) => (
                       <button
@@ -209,7 +213,7 @@ export default function ContactClient() {
                 <input name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
 
                 <label data-reveal className="block">
-                  <span className="mono text-ink/55">Tell us about the project *</span>
+                  <span className={label}>Tell us about the project *</span>
                   <textarea name="message" rows={4} placeholder="What are you trying to build?" className={`${field} resize-none`} aria-invalid={!!errors.message} />
                   {errors.message && <span className="mono mt-2 block text-signal">{errors.message}</span>}
                 </label>
