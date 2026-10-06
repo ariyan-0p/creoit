@@ -11,7 +11,6 @@ import { usePathname } from "next/navigation";
 import { gsap } from "@/lib/gsap";
 import { NAV_LINKS, SOCIALS, EMAIL } from "@/lib/site";
 import { useLenis } from "@/providers/SmoothScrollProvider";
-import { Clock } from "./Clock";
 import { onReady } from "@/lib/ready";
 
 export function Nav() {
@@ -145,12 +144,6 @@ export function Nav() {
             <img src="/images/logo/creoit-nav-dark.png" alt="" aria-hidden width={720} height={222} className="nav-logo-d col-start-1 row-start-1 h-9 w-auto" />
           </span>
         </Link>
-
-        <div className="mono pointer-events-none hidden items-center gap-3 md:flex">
-          <i className="rec" />
-          <span>Bhopal</span>
-          <Clock />
-        </div>
 
         <div className="pointer-events-auto flex items-center gap-3">
           <Link

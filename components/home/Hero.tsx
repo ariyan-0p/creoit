@@ -4,8 +4,7 @@
  * Hero — simple, bold and centred, out of focus until it matters.
  * "We create" / "what people" / "remember." stacked in the middle: the first two
  * lines sit soft until a lens following the pointer (idle / touch: it drifts on
- * its own) brings them into focus; "remember." is always crisp. Then the short
- * paragraph and the call to action. The page slides over this hero (sticky).
+ * its own) brings them into focus; "remember." is always crisp. Then the call to action. The page slides over this hero (sticky).
  */
 
 import { useEffect, useRef } from "react";
@@ -167,7 +166,7 @@ export function Hero() {
 
           {/* everything centred: two soft lines, "remember." below, then the paragraph */}
           <div className="flex flex-col items-center gap-5 text-center lg:gap-7">
-            <h1 className="display w-full text-[clamp(2.4rem,min(17.3vw,calc((100svh-26rem)/4.6)),6.5rem)] leading-[0.92] tracking-[-0.025em] md:text-[clamp(3rem,min(11vw,17svh),9rem)] lg:text-[clamp(3rem,min(9vw,calc((100svh-26rem)/2.9)),11rem)]">
+            <h1 className="display w-full text-[clamp(2.4rem,min(18vw,calc((100svh-21rem)/4.6)),7rem)] leading-[0.92] tracking-[-0.025em] md:text-[clamp(3rem,min(12.5vw,19svh),10rem)] lg:text-[clamp(3rem,min(10.2vw,calc((100svh-19rem)/2.9)),13rem)]">
               {/* a soft copy underneath and a sharp copy revealed through the lens on top */}
               <span className="grid">
                 <span aria-hidden className="col-start-1 row-start-1 block select-none text-paper/55 blur-[7px] will-change-transform [@media(hover:none)]:text-paper/80 [@media(hover:none)]:blur-[2.5px]">
@@ -189,16 +188,11 @@ export function Hero() {
 
               {/* "remember." centred below, always crisp */}
               <span className="mask-line -mt-[0.05em] block pb-[0.1em]">
-                <span className="hero-line serif-i inline-block text-[1.12em] normal-case leading-[0.9] tracking-[-0.03em] text-lilac">
+                <span className="hero-line serif-i inline-block text-[1.12em] max-md:text-[1.02em] normal-case leading-[0.9] tracking-[-0.03em] text-lilac">
                   remember.
                 </span>
               </span>
             </h1>
-
-            <p className="hero-fade max-w-md text-[0.95rem] leading-relaxed text-paper/70">
-              CREOIT is a collective of creative thinkers, strategists, marketers and makers — helping brands become
-              impossible to ignore.
-            </p>
           </div>
 
           <div className="hero-fade flex flex-wrap items-center justify-center gap-3">
