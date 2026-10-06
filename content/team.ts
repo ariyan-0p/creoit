@@ -21,7 +21,7 @@ export const team: TeamMember[] = [
     id: "rohit-prajapati",
     name: "Rohit Prajapati",
     role: "Co-Founder",
-    bio: "Builds the studio with Sujal and turns ambitious ideas into work that holds up in the real world.",
+    bio: "Leads growth and strategy at CREOIT, turning ambitious ideas into work that holds up in the real world.",
     photo: "/images/people/rohit-prajapati.jpg",
     craft: ["Growth", "Marketing Strategy", "Leadership"],
   },
