@@ -16,6 +16,7 @@ import { feature, mesh as topoMesh } from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { MultiPolygon, Polygon, FeatureCollection, MultiLineString } from "geojson";
 import { gsap } from "@/lib/gsap";
+import { perf } from "@/lib/perf";
 import { useLenis } from "@/providers/SmoothScrollProvider";
 
 export const HQ = { lat: 23.2599, lon: 77.4126 };
@@ -63,9 +64,9 @@ function toVec(lat: number, lon: number, out = new Vec3()) {
   return out.set(-Math.cos(phi) * Math.sin(th), Math.cos(th), Math.sin(phi) * Math.sin(th));
 }
 
-async function buildMapTexture(): Promise<HTMLCanvasElement> {
-  const W = 4096;
-  const H = 2048;
+async function buildMapTexture(W: number): Promise<HTMLCanvasElement> {
+  const H = W / 2;
+  const k = W / 4096; // line widths were drawn for 4096 wide
   const topo = (await import("world-atlas/countries-110m.json")).default as unknown as Topology;
   const c = document.createElement("canvas");
   c.width = W;
@@ -80,7 +81,7 @@ async function buildMapTexture(): Promise<HTMLCanvasElement> {
 
   // graticule
   ctx.strokeStyle = "rgba(164,139,255,0.22)";
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2 * k;
   ctx.beginPath();
   for (let lon = -180; lon <= 180; lon += 15) {
     ctx.moveTo(X(lon), 0);
@@ -126,7 +127,7 @@ async function buildMapTexture(): Promise<HTMLCanvasElement> {
   ctx.fillStyle = "#2b1470";
   ctx.fill("evenodd");
   ctx.strokeStyle = "#b9a6ff";
-  ctx.lineWidth = 3;
+  ctx.lineWidth = Math.max(1, 3 * k);
   ctx.stroke();
 
   // country borders
@@ -137,7 +138,7 @@ async function buildMapTexture(): Promise<HTMLCanvasElement> {
     OFFSETS.forEach((o) => pts.forEach(([lon, lat], i) => (i ? ctx.lineTo(X(lon + o), Y(lat)) : ctx.moveTo(X(lon + o), Y(lat)))));
   });
   ctx.strokeStyle = "rgba(185,166,255,0.55)";
-  ctx.lineWidth = 1.6;
+  ctx.lineWidth = Math.max(0.8, 1.6 * k);
   ctx.stroke();
 
   return c;
@@ -173,7 +174,7 @@ export function GlobeCanvas({
     const cleanups: Array<() => void> = [];
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const renderer = new Renderer({ alpha: true, dpr: Math.min(window.devicePixelRatio || 1, 1.5), antialias: true });
+    const renderer = new Renderer({ alpha: true, dpr: Math.min(window.devicePixelRatio || 1, perf.lite ? 1.25 : 1.5), antialias: true });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     el.appendChild(gl.canvas);
@@ -211,9 +212,21 @@ export function GlobeCanvas({
     const state = { hover: false, dragging: false, idle: 0 };
 
     (async () => {
-      const canvas = await buildMapTexture();
+      // wait until the globe is near the screen before paying for the map texture
+      await new Promise<void>((res) => {
+        const near = new IntersectionObserver(([e]) => {
+          if (e.isIntersecting) {
+            near.disconnect();
+            res();
+          }
+        }, { rootMargin: "900px 0px" });
+        near.observe(el);
+        cleanups.push(() => near.disconnect());
+      });
       if (disposed) return;
-      const texture = new Texture(gl, { image: canvas, generateMipmaps: true, minFilter: gl.LINEAR_MIPMAP_LINEAR, anisotropy: 8 });
+      const canvas = await buildMapTexture(perf.lite ? 2048 : 4096);
+      if (disposed) return;
+      const texture = new Texture(gl, { image: canvas, generateMipmaps: true, minFilter: gl.LINEAR_MIPMAP_LINEAR, anisotropy: perf.lite ? 4 : 8 });
       const program = new Program(gl, { vertex, fragment, uniforms: { tMap: { value: texture } } });
       const mesh = new Mesh(gl, { geometry: new Sphere(gl, { radius: 1, widthSegments: 96, heightSegments: 64 }), program });
       mesh.setParent(scene);

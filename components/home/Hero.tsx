@@ -97,9 +97,17 @@ export function Hero() {
     };
 
     const t0 = performance.now();
+    // measure only when layout can have changed (scroll scales the hero, resize reflows it)
+    let dirty = true;
+    const markDirty = () => (dirty = true);
+    window.addEventListener("scroll", markDirty, { passive: true });
+    window.addEventListener("resize", markDirty);
     const frame = () => {
       if (!on || window.scrollY > window.innerHeight * 1.1 || document.hidden) return;
-      measure();
+      if (dirty) {
+        measure();
+        dirty = false;
+      }
       const t = (performance.now() - t0) / 1000;
       const useReal = pointer.moved;
       // No pointer (touch / idle): sweep the lens back and forth across the headline itself.
@@ -129,6 +137,8 @@ export function Hero() {
 
     return () => {
       off();
+      window.removeEventListener("scroll", markDirty);
+      window.removeEventListener("resize", markDirty);
       ctx.revert();
       gsap.ticker.remove(frame);
     };

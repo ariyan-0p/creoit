@@ -13,12 +13,20 @@ import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { LENIS_OPTIONS } from "@/lib/lenis";
 import { lenisStore } from "@/lib/lenis-store";
+import { initPerf } from "@/lib/perf";
 
 export function useLenis() {
   return useSyncExternalStore(lenisStore.subscribe, lenisStore.get, lenisStore.getServer);
 }
 
 export default function SmoothScrollProvider({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    initPerf((fn) => {
+      gsap.ticker.add(fn);
+      return () => gsap.ticker.remove(fn);
+    });
+  }, []);
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 

@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Contact — the brief form. There's no backend yet, so on submit we validate,
- * compose the message and hand it to the visitor's email app (mailto:), then
- * confirm. Swap `send()` for a real endpoint later without touching the UI.
+ * Contact — the brief form. Validates, posts to /api/contact (stored on the
+ * server and emailed to the studio), and falls back to the visitor's email app
+ * only if the server can't be reached.
  */
 
 import { useState, type FormEvent } from "react";
@@ -34,10 +34,13 @@ export default function ContactClient() {
   const [budget, setBudget] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState("");
+  const [opened] = useState(() => Date.now());
 
   const toggle = (v: string) => setInterests((c) => (c.includes(v) ? c.filter((x) => x !== v) : [...c, v]));
 
-  const send = (d: Record<string, string>) => {
+  const mailto = (d: Record<string, string>) => {
     const body = [
       `Name: ${d.name}`,
       `Company / brand: ${d.company}`,
@@ -53,7 +56,7 @@ export default function ContactClient() {
     window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(`New brief — ${d.company}`)}&body=${encodeURIComponent(body)}`;
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const d = Object.fromEntries(fd.entries()) as Record<string, string>;
@@ -64,8 +67,23 @@ export default function ContactClient() {
     if (!d.message?.trim()) next.message = "A line or two about what you're building.";
     setErrors(next);
     if (Object.keys(next).length) return;
-    send(d);
-    setSent(true);
+    setFailed("");
+    setSending(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...d, interests, budget, t: opened }),
+      });
+      const out = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (res.ok && out.ok) setSent(true);
+      else setFailed(out.error ?? "Something went wrong. Please try again.");
+    } catch {
+      mailto(d); // server unreachable: hand the brief to the email app instead
+      setSent(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -113,14 +131,14 @@ export default function ContactClient() {
                   <i className="rec" /> Frame captured
                 </p>
                 <h2 className="display text-[clamp(2.4rem,5.6vw,5.6rem)] leading-[0.96]">
-                  Your email app should be <span className="serif-i text-lilac">open.</span>
+                  Brief <span className="serif-i text-lilac">received.</span>
                 </h2>
                 <p className="mt-6 max-w-md text-paper/75">
-                  Hit send there and the brief lands with us. If nothing opened, write to{" "}
+                  Thank you. We read every brief and reply personally, usually within a day. Anything urgent? Write to{" "}
                   <a href={`mailto:${EMAIL}`} className="u-link text-paper">
                     {EMAIL}
-                  </a>{" "}
-                  directly.
+                  </a>
+                  .
                 </p>
                 <button type="button" onClick={() => setSent(false)} className="mono u-link mt-10 text-paper">
                   ← Edit the brief
@@ -188,6 +206,9 @@ export default function ContactClient() {
                   </div>
                 </fieldset>
 
+                {/* honeypot: people never see or fill this, bots do */}
+                <input name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+
                 <label data-reveal className="block">
                   <span className="mono text-ink/55">Tell us about the project *</span>
                   <textarea name="message" rows={4} placeholder="What are you trying to build?" className={`${field} resize-none`} aria-invalid={!!errors.message} />
@@ -197,12 +218,15 @@ export default function ContactClient() {
                 <div data-reveal className="flex flex-wrap items-center gap-6">
                   <button
                     type="submit"
+                    disabled={sending}
                     data-cursor="Send"
                     className="mono group relative isolate inline-flex items-center gap-3 overflow-hidden rounded-full bg-signal px-9 py-5 text-paper transition-colors duration-500 before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:rounded-[50%] before:bg-ink before:transition-transform before:duration-700 before:ease-[var(--ease)] hover:before:translate-y-0 hover:before:rounded-none"
                   >
-                    Send the brief <span aria-hidden>→</span>
+                    {sending ? "Sending…" : "Send the brief"} <span aria-hidden>→</span>
                   </button>
-                  <p className="mono max-w-[26ch] text-ink/50">Opens your email app with everything filled in.</p>
+                  <p role="status" className={`mono max-w-[30ch] ${failed ? "text-signal" : "text-ink/50"}`}>
+                    {failed || "We reply personally, usually within a day."}
+                  </p>
                 </div>
               </form>
             )}
