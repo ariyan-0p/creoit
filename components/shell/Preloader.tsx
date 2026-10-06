@@ -30,6 +30,8 @@ const ICONS = [
 
 /** logo geometry: the art is 1762x542; the i dot centre is at (75.6%, 6.7%), the full stop at (97.8%, 92.8%) */
 const SCRIPT_W = (1277 / 1762) * 100;
+/** the art has a 38px gap between the o and the i; the "it" slides left so they join */
+const JOIN = (40 / 1762) * 100;
 
 export function Preloader() {
   const root = useRef<HTMLDivElement>(null);
@@ -185,7 +187,7 @@ export function Preloader() {
         <div className="relative" style={{ width: "min(80vw, 60rem)", aspectRatio: "1762 / 542" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo/pl-script.png" alt="" className="pl-script absolute left-0 top-0 h-full" style={{ width: `${SCRIPT_W}%` }} />
-          <div className="absolute top-0 h-full overflow-hidden" style={{ left: `${SCRIPT_W}%`, width: `${100 - SCRIPT_W}%` }}>
+          <div className="absolute top-0 h-full overflow-hidden" style={{ left: `${SCRIPT_W - JOIN}%`, width: `${100 - SCRIPT_W}%` }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/logo/pl-it.png" alt="" className="pl-it block h-full w-full" />
           </div>
@@ -194,7 +196,7 @@ export function Preloader() {
           <div
             ref={tile}
             className="absolute aspect-square overflow-hidden rounded-full bg-signal opacity-0 shadow-[0_0_0_0.5vw_rgba(106,61,255,0.18)]"
-            style={{ left: "70.9%", top: "-8.5%", width: "9.4%" }}
+            style={{ left: `${70.9 - JOIN}%`, top: "-8.5%", width: "9.4%" }}
           >
             {ICONS.map((ic) => (
               /* each slot is the FULL badge, so sliding ±100% moves the neighbour completely out of view */
@@ -206,7 +208,7 @@ export function Preloader() {
           </div>
 
           {/* the full stop: a round purple dot, the twin of the settled ticker */}
-          <div ref={stop} className="pl-stop absolute aspect-square rounded-full bg-signal" style={{ left: "95.7%", top: "85.9%", width: "4.3%" }} />
+          <div ref={stop} className="pl-stop absolute aspect-square rounded-full bg-signal" style={{ left: `${95.7 - JOIN}%`, top: "85.9%", width: "4.3%" }} />
         </div>
       </div>
 
