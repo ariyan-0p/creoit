@@ -71,7 +71,8 @@ export function Cursor() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[300] mix-blend-difference">
+    // hidden everywhere until a mouse is detected (html.has-cursor): phones/tablets never see it
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[300] hidden mix-blend-difference [html.has-cursor_&]:block">
       <div
         ref={ring}
         className="fixed left-0 top-0 grid h-[34px] w-[34px] place-items-center rounded-full border border-white"
