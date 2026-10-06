@@ -9,10 +9,15 @@
  */
 
 import { useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { gsap } from "@/lib/gsap";
+import { bindPointer } from "@/lib/pointer";
 import { onReady } from "@/lib/ready";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { Pill } from "@/components/ui/Pill";
+
+// the floating light discs behind the headline (WebGL, loaded after the page is interactive)
+const Bokeh = dynamic(() => import("./Bokeh").then((m) => m.Bokeh), { ssr: false });
 
 const LINES = ["We create", "what people"] as const;
 
@@ -23,6 +28,7 @@ export function Hero() {
   useEffect(() => {
     const el = root.current;
     if (!el) return;
+    bindPointer();
 
     // The entrance waits for the preloader. Built inside a gsap.context so
     // React's dev double-mount reverts cleanly.
@@ -71,6 +77,7 @@ export function Hero() {
                 "radial-gradient(60% 55% at 78% 88%, rgba(106,61,255,0.42) 0%, rgba(106,61,255,0) 70%), radial-gradient(50% 50% at 14% 14%, rgba(20,0,33,0.9) 0%, rgba(20,0,33,0) 100%)",
             }}
           />
+          <Bokeh className="absolute inset-0" />
         </div>
 
         <div className="absolute inset-0 flex flex-col justify-between gap-6 px-[var(--pad-in)] pb-[3rem] pt-[6.5rem] lg:justify-center lg:gap-12 lg:pb-[var(--pad-bottom)] lg:pt-[7rem]">
