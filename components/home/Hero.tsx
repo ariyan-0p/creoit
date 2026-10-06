@@ -193,12 +193,12 @@ export function Hero() {
           </p>
 
           <h1 className="display grid text-[clamp(2.6rem,min(10.6vw,15svh),12rem)] leading-[0.9] tracking-[-0.025em] max-md:text-[clamp(2.6rem,min(17.5vw,12.5svh),6.5rem)]">
-            <span ref={soft} aria-hidden className="col-start-1 row-start-1 select-none text-paper/55 blur-[7px] [@media(hover:none)]:text-paper/80 [@media(hover:none)]:blur-[2.5px]">
+            <span ref={soft} aria-hidden className="col-start-1 row-start-1 select-none text-paper/55 blur-[7px] will-change-transform [@media(hover:none)]:text-paper/80 [@media(hover:none)]:blur-[2.5px]">
               <Lines />
             </span>
             <span
               ref={sharp}
-              className="col-start-1 row-start-1 text-paper"
+              className="col-start-1 row-start-1 text-paper will-change-transform"
               style={{
                 WebkitMaskImage:
                   "radial-gradient(circle var(--r, 0px) at var(--mx, 50%) var(--my, 50%), #000 0%, #000 52%, transparent 100%)",

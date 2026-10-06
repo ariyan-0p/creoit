@@ -24,12 +24,32 @@ export function Manifesto() {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const split = SplitText.create(".mf-text", { type: "words", wordsClass: "mf-word" });
-        gsap.set(split.words, { opacity: 0.12, filter: "blur(6px)" });
-        gsap.to(split.words, {
-          opacity: 1,
-          filter: "blur(0px)",
+        // Same look as tweening every word's opacity + blur, but only the few words
+        // that are mid-transition are touched, blur moves in 0.5px steps, and a fully
+        // sharp word drops its filter altogether — far less repainting per scroll frame.
+        const words = split.words as HTMLElement[];
+        const each = 0.12;
+        const dur = 0.5;
+        const total = (words.length - 1) * each + dur;
+        const last = new Array<string>(words.length).fill("");
+        const paint = (p: number) => {
+          const t = p * total;
+          for (let i = 0; i < words.length; i++) {
+            const w = Math.min(1, Math.max(0, (t - i * each) / dur));
+            const b = Math.round((1 - w) * 6 * 2) / 2;
+            const key = `${b}|${w === 0 || w === 1 ? w : w.toFixed(2)}`;
+            if (key === last[i]) continue;
+            last[i] = key;
+            words[i].style.opacity = String(0.12 + 0.88 * w);
+            words[i].style.filter = b === 0 ? "none" : `blur(${b}px)`;
+          }
+        };
+        paint(0);
+        const prog = { p: 0 };
+        gsap.to(prog, {
+          p: 1,
           ease: "none",
-          stagger: 0.12,
+          onUpdate: () => paint(prog.p),
           scrollTrigger: {
             trigger: ".mf-text",
             start: "top 78%",

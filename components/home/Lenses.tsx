@@ -162,6 +162,7 @@ export function Lenses() {
   const bokehRefs = useRef<(SVGCircleElement | null)[]>([]);
   const blurRef = useRef<SVGFEGaussianBlurElement>(null);
   const countRef = useRef<HTMLSpanElement>(null);
+  const lightSig = useRef("");
 
   useGSAP(
     () => {
@@ -177,12 +178,19 @@ export function Lenses() {
           el.setAttribute("y2", l.y2.toFixed(2));
         });
         // lights: dof 0 (wide open) → 1 (stopped down)
-        const size = 1.55 - dof * 1.2;
-        blurRef.current?.setAttribute("stdDeviation", (7 - dof * 6.6).toFixed(2));
+        // the blurred lights are the costly part: write them only when a value really moved
+        // (fine steps, visually continuous), so most scroll frames skip the blur repaint
+        const sd = (Math.round((7 - dof * 6.6) * 8) / 8).toFixed(3);
+        const size = Math.round((1.55 - dof * 1.2) * 40) / 40;
+        const op = (Math.round((0.5 + dof * 0.45) * 50) / 50).toFixed(2);
+        const sig = `${sd}|${size}|${op}`;
+        if (sig === lightSig.current) return;
+        lightSig.current = sig;
+        blurRef.current?.setAttribute("stdDeviation", sd);
         bokehRefs.current.forEach((c, i) => {
           if (!c) return;
           c.setAttribute("r", (BOKEH[i][2] * size).toFixed(2));
-          c.setAttribute("opacity", (0.5 + dof * 0.45).toFixed(2));
+          c.setAttribute("opacity", op);
         });
       };
 
