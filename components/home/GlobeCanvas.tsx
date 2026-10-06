@@ -23,7 +23,7 @@ export const HQ = { lat: 23.2599, lon: 77.4126 };
 export type Pin = { lat: number; lon: number };
 
 const FOV = 28;
-const CAM_Z = 5.4;
+const CAM_Z = 4.8;
 
 const vertex = /* glsl */ `
   attribute vec3 position;
@@ -149,15 +149,19 @@ export function GlobeCanvas({
   hqRef,
   pinRef,
   resetSignal,
+  target = null,
 }: {
   onPin: (p: Pin | null) => void;
   hqRef: React.RefObject<HTMLDivElement | null>;
   pinRef: React.RefObject<HTMLDivElement | null>;
   resetSignal: number;
+  /** a place to fly to and mark (the scroll journey); null = rest at the studio */
+  target?: Pin | null;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const lenis = useLenis();
-  const api = useRef<{ focus: (lat: number, lon: number) => void; setPin: (p: Pin | null) => void } | null>(null);
+  const api = useRef<{ focus: (lat: number, lon: number) => void; setPin: (p: Pin | null) => void; fly: (t: Pin | null) => void } | null>(null);
+  const targetRef = useRef<Pin | null>(target);
   const lenisRef = useRef(lenis);
   useEffect(() => {
     lenisRef.current = lenis;
@@ -166,6 +170,11 @@ export function GlobeCanvas({
   useEffect(() => {
     if (resetSignal > 0) api.current?.focus(HQ.lat, HQ.lon);
   }, [resetSignal]);
+
+  useEffect(() => {
+    targetRef.current = target;
+    api.current?.fly(target);
+  }, [target]);
 
   useEffect(() => {
     const el = host.current;
@@ -262,7 +271,7 @@ export function GlobeCanvas({
           view.rx += view.vx;
           view.vy *= 0.94;
           view.vx *= 0.94;
-          if (!reduce && !state.hover) view.ry += 0.0016 + Math.min(Math.abs(lv), 30) * 0.0006;
+          if (!reduce && !state.hover && !targetRef.current) view.ry += 0.0016 + Math.min(Math.abs(lv), 30) * 0.0006;
         }
         view.rx = Math.max(-1.1, Math.min(1.1, view.rx));
         mesh.rotation.y = view.ry;
@@ -357,8 +366,22 @@ export function GlobeCanvas({
         },
         setPin: (p) => {
           pin = p;
+          if (!p && pinRef.current) {
+            pinRef.current.style.opacity = "0";
+            pinRef.current.style.visibility = "hidden";
+          }
+        },
+        fly: (t) => {
+          if (t) {
+            api.current?.focus(t.lat, t.lon);
+            pin = t;
+          } else {
+            api.current?.focus(HQ.lat, HQ.lon);
+            api.current?.setPin(null);
+          }
         },
       };
+      if (targetRef.current) api.current.fly(targetRef.current);
     })();
 
     return () => {
