@@ -157,7 +157,7 @@ export function Nav() {
             href="/contact"
             className="nav-btn mono hidden px-5 py-3 sm:block"
           >
-            Let&apos;s talk
+            <span>Let&apos;s talk</span>
           </Link>
           <button
             type="button"
