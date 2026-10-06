@@ -157,8 +157,8 @@ export function Team() {
                   </span>
                 </div>
 
-                <div className="grid items-end gap-4 md:grid-cols-12 md:gap-10">
-                  <div className="md:col-span-7">
+                <div className="grid items-end gap-4 md:grid-cols-[minmax(0,44rem)_auto] md:justify-center md:gap-x-[clamp(3rem,7vw,8rem)]">
+                  <div>
                     <h3 className="tm-k display max-w-[12ch] text-[clamp(2rem,9.4vw,3.2rem)] leading-[0.95] md:text-[clamp(2.6rem,6.4vw,7rem)]">
                       {hasName ? m.name : m.role}
                     </h3>
@@ -198,11 +198,11 @@ export function Team() {
                   </div>
 
                   {/* portrait first on phones, beside the text on larger screens */}
-                  <div className="order-first md:order-none md:col-span-5">
+                  <div className="order-first md:order-none">
                     <Portrait
                       photo={m.photo}
                       label={hasName ? m.name : m.role}
-                      className={`tm-frame mx-auto aspect-[4/5] h-[min(36svh,70vw)] w-auto rounded-[1.5rem] md:ml-auto md:mr-0 md:h-auto md:w-[min(30vw,23rem)] md:max-h-[62svh] md:rounded-[1.75rem] ${th.frame}`}
+                      className={`tm-frame mx-auto aspect-[4/5] h-[min(36svh,70vw)] w-auto rounded-[1.5rem] md:mx-0 md:h-auto md:w-[min(32vw,28rem)] md:max-h-[64svh] md:rounded-[1.75rem] ${th.frame}`}
                     />
                   </div>
                 </div>
