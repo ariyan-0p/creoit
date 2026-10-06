@@ -15,7 +15,6 @@ export default function ThinkingPage() {
       <PageHero
         index="04"
         label="Thinking"
-        ring="Questions worth asking"
         title={
           <>
             Think<span className="serif-i text-lilac">ing.</span>

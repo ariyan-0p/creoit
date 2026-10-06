@@ -23,7 +23,6 @@ export default function AboutPage() {
       <PageHero
         index="01"
         label="About"
-        ring="Team first creative"
         title={
           <>
             We are <span className="serif-i text-lilac">CREOIT.</span>

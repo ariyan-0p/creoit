@@ -23,7 +23,6 @@ export default function WhatWeDoPage() {
       <PageHero
         index="02"
         label="What we do"
-        ring="Six lenses one team"
         title={
           <>
             How can we <span className="serif-i text-lilac">help?</span>

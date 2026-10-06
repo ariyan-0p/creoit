@@ -37,7 +37,6 @@ export default function CareersPage() {
       <PageHero
         index="05"
         label="Careers"
-        ring="Build something with us"
         title={
           <>
             We&apos;re building a <span className="serif-i text-lilac">team.</span>

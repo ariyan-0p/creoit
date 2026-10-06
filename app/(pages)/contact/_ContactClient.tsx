@@ -91,7 +91,6 @@ export default function ContactClient() {
       <PageHero
         index="06"
         label="Contact"
-        ring="Let's talk about what's next"
         title={
           <>
             Let&apos;s talk about <span className="serif-i text-lilac">what&apos;s next.</span>

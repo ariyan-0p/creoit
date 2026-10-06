@@ -15,7 +15,6 @@ export default function WorkPage() {
       <PageHero
         index="03"
         label="The work"
-        ring="Selected work in focus"
         title={
           <>
             Ideas that <span className="serif-i text-lilac">stuck.</span>

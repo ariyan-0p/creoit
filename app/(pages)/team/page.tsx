@@ -20,7 +20,6 @@ export default function TeamPage() {
       <PageHero
         index="07"
         label="The team"
-        ring="Different people one direction"
         title={
           <>
             The <span className="serif-i text-lilac">people.</span>

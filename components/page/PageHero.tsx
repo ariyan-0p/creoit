@@ -1,23 +1,20 @@
 import type { ReactNode } from "react";
-import { LensRing } from "@/components/ui/LensRing";
 
 /**
- * PageHero — shared inner-page opener. Dark, viewfinder-framed, with the
- * lens-ring motif. `title` is rendered inside <h1 data-lines>.
+ * PageHero — shared inner-page opener. Dark and viewfinder-framed.
+ * `title` is rendered inside <h1 data-lines>.
  */
 export function PageHero({
   index,
   label,
   title,
   lead,
-  ring,
   children,
 }: {
   index: string;
   label: string;
   title: ReactNode;
   lead?: string;
-  ring: string;
   children?: ReactNode;
 }) {
   return (
@@ -32,11 +29,6 @@ export function PageHero({
           background:
             "radial-gradient(55% 60% at 82% 38%, rgba(106,61,255,0.5) 0%, rgba(106,61,255,0) 70%), radial-gradient(50% 50% at 8% 0%, rgba(20,0,33,0.95) 0%, rgba(20,0,33,0) 100%)",
         }}
-      />
-
-      <LensRing
-        text={ring}
-        className="pointer-events-none absolute right-[-12vw] top-[12svh] w-[min(86vw,66svh)] opacity-90 md:right-[3vw] md:w-[min(42vw,72svh)]"
       />
 
       <div className="pointer-events-none absolute inset-x-[var(--pad)] bottom-[var(--pad)] top-[5.6rem] text-paper/40" aria-hidden>
