@@ -1,12 +1,11 @@
 "use client";
 
 /**
- * Hero — simple and bold, out of focus until it matters.
- * "We create what people" in big type that sits soft until a lens following the
- * pointer (idle / touch: it drifts on its own) brings it into focus, "remember." pushed to the right
- * underneath it, the short paragraph tucked in the empty space to its left, and
- * the call to action below. The page then slides over this hero (it is
- * position: sticky).
+ * Hero — simple, bold and centred, out of focus until it matters.
+ * "We create" / "what people" / "remember." stacked in the middle: the first two
+ * lines sit soft until a lens following the pointer (idle / touch: it drifts on
+ * its own) brings them into focus; "remember." is always crisp. Then the short
+ * paragraph and the call to action. The page slides over this hero (sticky).
  */
 
 import { useEffect, useRef } from "react";
@@ -162,22 +161,21 @@ export function Hero() {
         </div>
 
         <div className="absolute inset-0 flex flex-col justify-between gap-6 px-[var(--pad-in)] pb-[3rem] pt-[6.5rem] lg:justify-center lg:gap-12 lg:pb-[var(--pad-bottom)] lg:pt-[7rem]">
-          <p className="mono hero-fade flex items-center gap-3 text-paper/70">
+          <p className="mono hero-fade flex items-center justify-center gap-3 text-center text-paper/70">
             <span className="h-px w-8 bg-lilac" /> 360° creative marketing — Bhopal, India
           </p>
 
-          {/* the headline, the paragraph and "remember." share one grid: the paragraph sits in the empty left
-              space beside "remember." (below it on narrower screens) */}
-          <div className="grid gap-x-10 gap-y-5 lg:grid-cols-[minmax(0,24rem)_1fr] lg:items-center">
-            <h1 className="display contents text-[clamp(2.4rem,min(17.3vw,calc((100svh-26rem)/4.6)),6.5rem)] leading-[0.92] tracking-[-0.025em] md:text-[clamp(3rem,min(11vw,17svh),9rem)] lg:text-[clamp(3rem,min(6.7vw,17svh),11rem)]">
+          {/* everything centred: two soft lines, "remember." below, then the paragraph */}
+          <div className="flex flex-col items-center gap-5 text-center lg:gap-7">
+            <h1 className="display w-full text-[clamp(2.4rem,min(17.3vw,calc((100svh-26rem)/4.6)),6.5rem)] leading-[0.92] tracking-[-0.025em] md:text-[clamp(3rem,min(11vw,17svh),9rem)] lg:text-[clamp(3rem,min(9vw,calc((100svh-26rem)/2.9)),11rem)]">
               {/* a soft copy underneath and a sharp copy revealed through the lens on top */}
-              <span className="grid lg:col-span-2">
-                <span aria-hidden className="col-start-1 row-start-1 block select-none text-paper/55 blur-[7px] will-change-transform lg:flex lg:gap-x-[0.27em] [@media(hover:none)]:text-paper/80 [@media(hover:none)]:blur-[2.5px]">
+              <span className="grid">
+                <span aria-hidden className="col-start-1 row-start-1 block select-none text-paper/55 blur-[7px] will-change-transform [@media(hover:none)]:text-paper/80 [@media(hover:none)]:blur-[2.5px]">
                   <Line1 />
                 </span>
                 <span
                   ref={sharp}
-                  className="col-start-1 row-start-1 block text-paper will-change-transform lg:flex lg:gap-x-[0.27em]"
+                  className="col-start-1 row-start-1 block text-paper will-change-transform"
                   style={{
                     WebkitMaskImage:
                       "radial-gradient(circle var(--r, 0px) at var(--mx, 50%) var(--my, 50%), #000 0%, #000 52%, transparent 100%)",
@@ -189,15 +187,15 @@ export function Hero() {
                 </span>
               </span>
 
-              {/* "remember." pushed to the right, always crisp */}
-              <span className="mask-line -mt-[0.05em] block pb-[0.1em] text-right lg:col-start-2 lg:row-start-2">
+              {/* "remember." centred below, always crisp */}
+              <span className="mask-line -mt-[0.05em] block pb-[0.1em]">
                 <span className="hero-line serif-i inline-block text-[1.12em] normal-case leading-[0.9] tracking-[-0.03em] text-lilac">
                   remember.
                 </span>
               </span>
             </h1>
 
-            <p className="hero-fade max-w-sm text-[0.95rem] leading-relaxed text-paper/70 lg:col-start-1 lg:row-start-2">
+            <p className="hero-fade max-w-md text-[0.95rem] leading-relaxed text-paper/70">
               CREOIT is a collective of creative thinkers, strategists, marketers and makers — helping brands become
               impossible to ignore.
             </p>
