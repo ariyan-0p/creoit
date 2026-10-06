@@ -187,12 +187,12 @@ export function Hero() {
         </div>
 
         {/* content */}
-        <div className="absolute inset-0 flex flex-col justify-end px-[var(--pad-in)] pb-[var(--pad-bottom)] pt-[clamp(7rem,15svh,9rem)]">
-          <p className="mono hero-fade mb-[clamp(0.9rem,2.6svh,1.75rem)] flex items-center gap-3 text-paper/70">
+        <div className="absolute inset-0 flex flex-col justify-end px-[var(--pad-in)] pb-[var(--pad-bottom)] pt-[clamp(7rem,15svh,9rem)] max-md:justify-between max-md:gap-4 max-md:pb-[4.5rem] max-md:pt-[6rem]">
+          <p className="mono hero-fade mb-[clamp(0.9rem,2.6svh,1.75rem)] flex items-center max-md:mb-0 gap-3 text-paper/70">
             <span className="h-px w-8 bg-lilac" /> 360° creative marketing — Bhopal, India
           </p>
 
-          <h1 className="display grid text-[clamp(2.6rem,min(10.6vw,15svh),12rem)] leading-[0.9] tracking-[-0.025em] max-md:text-[clamp(2.6rem,min(17.5vw,12.5svh),6.5rem)]">
+          <h1 className="display grid text-[clamp(2.6rem,min(10.6vw,15svh),12rem)] leading-[0.9] tracking-[-0.025em] max-md:text-[clamp(2.2rem,min(17.3vw,calc((100svh-29rem)/4.4)),6.5rem)]">
             <span ref={soft} aria-hidden className="col-start-1 row-start-1 select-none text-paper/55 blur-[7px] will-change-transform [@media(hover:none)]:text-paper/80 [@media(hover:none)]:blur-[2.5px]">
               <Lines />
             </span>
@@ -216,7 +216,7 @@ export function Hero() {
             </span>
           </h1>
 
-          <div className="mt-[clamp(1.25rem,4svh,2.5rem)] flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="mt-[clamp(1.25rem,4svh,2.5rem)] flex flex-col gap-6 max-md:mt-0 md:flex-row md:items-end md:justify-between">
             <p className="hero-fade max-w-md text-[0.95rem] leading-relaxed text-paper/75">
               CREOIT is a collective of creative thinkers, strategists, marketers and makers — helping brands become
               impossible to ignore.
