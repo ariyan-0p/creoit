@@ -167,7 +167,7 @@ export function Hero() {
         />
 
         {/* content */}
-        <div className="absolute inset-0 flex flex-col justify-end px-[var(--pad-in)] pb-[var(--pad-bottom)] pt-[clamp(7rem,15svh,9rem)] max-md:justify-between max-md:gap-4 max-md:pb-[4.5rem] max-md:pt-[6rem] [@media(orientation:portrait)_and_(max-width:1023px)]:justify-between [@media(orientation:portrait)_and_(max-width:1023px)]:gap-4">
+        <div className="absolute inset-0 flex flex-col justify-end px-[var(--pad-in)] pb-[var(--pad-bottom)] pt-[clamp(7rem,15svh,9rem)] max-md:justify-between max-md:gap-4 max-md:pb-[3rem] max-md:pt-[6rem] [@media(orientation:portrait)_and_(max-width:1023px)]:justify-between [@media(orientation:portrait)_and_(max-width:1023px)]:gap-4">
           <p className="mono hero-fade mb-[clamp(0.9rem,2.6svh,1.75rem)] flex items-center max-md:mb-0 gap-3 text-paper/70">
             <span className="h-px w-8 bg-lilac" /> 360° creative marketing — Bhopal, India
           </p>
@@ -212,16 +212,6 @@ export function Hero() {
               </Pill>
             </div>
           </div>
-        </div>
-
-        {/* bottom meta */}
-        <div className="mono hero-fade absolute inset-x-[var(--pad-in)] bottom-[var(--pad)] flex items-center justify-between text-paper/55">
-          <span className="hidden sm:block" />
-          <span className="flex items-center gap-3">
-            <span className="[@media(hover:none)]:hidden">Move to focus</span>
-            <span className="hidden [@media(hover:none)]:inline">Watch it focus</span>
-            <span className="inline-block h-px w-10 bg-paper/40" /> Scroll
-          </span>
         </div>
       </div>
     </section>

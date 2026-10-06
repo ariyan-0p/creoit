@@ -5,7 +5,6 @@ import { Preloader } from "./Preloader";
 import { Cursor } from "./Cursor";
 import { Nav } from "./Nav";
 import { Footer } from "./Footer";
-import { ScrollHud } from "./ScrollHud";
 
 /**
  * Shell — persistent chrome. <main> sits above a fixed footer and carries a
@@ -18,7 +17,6 @@ export function Shell({ children }: { children: ReactNode }) {
       <Preloader />
       <Cursor />
       <Nav />
-      <ScrollHud />
       <main
         id="main"
         className="relative z-10 bg-ink"
