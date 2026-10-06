@@ -13,7 +13,7 @@ import { ScrollHud } from "./ScrollHud";
  */
 export function Shell({ children }: { children: ReactNode }) {
   return (
-    <div style={{ ["--footer-h" as string]: "max(100svh, 40rem)" }}>
+    <div>
       <style>{`@keyframes pl-failsafe{to{visibility:hidden}}#preloader{animation:pl-failsafe 0s 12s forwards}`}</style>
       <Preloader />
       <Cursor />

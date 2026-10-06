@@ -335,3 +335,8 @@ html.menu-open {
 @media (prefers-reduced-motion: reduce) {
   .tb-arrow { animation: none; }
 }
+
+/* footer height (curtain reveal) */
+:root {
+  --footer-h: max(100svh, 40rem);
+}
