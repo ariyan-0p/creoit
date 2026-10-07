@@ -12,7 +12,7 @@ import { Clock } from "./Clock";
 export function Footer() {
   return (
     <footer
-      className="fixed inset-x-0 bottom-0 z-0 flex flex-col justify-between overflow-hidden bg-deep px-[var(--pad)] pb-7 pt-[5rem] md:pb-20 md:pt-24 text-paper"
+      className="fixed inset-x-0 bottom-0 z-0 flex flex-col justify-between overflow-hidden bg-deep px-[var(--pad)] pb-11 pt-[4.5rem] md:pb-20 md:pt-24 text-paper"
       style={{ height: "var(--footer-h)" }}
     >
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:gap-8">
@@ -110,19 +110,20 @@ export function Footer() {
           Bhopal <Clock seconds />
         </span>
         <span className="max-md:hidden">We create what people remember.</span>
-        <span>
-          Powered by{" "}
-          <a
-            href="https://ariyan-0p.github.io/Ariyan-portlio/"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="Visit"
-            className="u-link text-paper"
-          >
-            Ariyan Samal ↗
-          </a>
-        </span>
       </div>
+      {/* the credit: centred on its own line at the very bottom */}
+      <p className="mono absolute inset-x-0 bottom-3 text-center text-dim md:bottom-5">
+        Powered by{" "}
+        <a
+          href="https://ariyan-0p.github.io/Ariyan-portlio/"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cursor="Visit"
+          className="u-link text-paper"
+        >
+          Ariyan Samal ↗
+        </a>
+      </p>
     </footer>
   );
 }
