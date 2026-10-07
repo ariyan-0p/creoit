@@ -106,10 +106,22 @@ export function Footer() {
 
       <div className="mono flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-paper/15 pt-4 text-dim md:gap-3 md:pt-5">
         <span>© {new Date().getFullYear()} CREOIT. All frames reserved.</span>
-        <span>
+        <span className="max-md:[@media(max-height:700px)]:hidden">
           Bhopal <Clock seconds />
         </span>
         <span className="max-md:hidden">We create what people remember.</span>
+        <span>
+          Powered by{" "}
+          <a
+            href="https://ariyan-0p.github.io/Ariyan-portlio/"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor="Visit"
+            className="u-link text-paper"
+          >
+            Ariyan Samal ↗
+          </a>
+        </span>
       </div>
     </footer>
   );
