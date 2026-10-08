@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# sibling projects that live in this folder (each has its own git repo)
+/creoit-api
+/creoit-admin
+/creoit-mobile
+/creoit-signing

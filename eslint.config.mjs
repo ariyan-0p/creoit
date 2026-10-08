@@ -11,6 +11,10 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    "creoit-api/**",
+    "creoit-admin/**",
+    "creoit-mobile/**",
+    "creoit-signing/**",
     "next-env.d.ts",
   ]),
 ]);

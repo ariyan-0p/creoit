@@ -20,7 +20,7 @@ npx next build >/dev/null
 echo "▸ uploading…"
 tar czf - \
   --exclude=node_modules --exclude=.next --exclude=.git --exclude=.vercel --exclude=.claude \
-  --exclude=ClashDisplay_Complete --exclude=MONIQA_v.1.0 --exclude="*.log" . \
+  --exclude=./creoit-api --exclude=./creoit-admin --exclude=./creoit-mobile --exclude=./creoit-signing --exclude=ClashDisplay_Complete --exclude=MONIQA_v.1.0 --exclude="*.log" . \
   | "${SSH[@]}" "$USER_AT" 'mkdir -p /var/www/creoit && tar xzf - -C /var/www/creoit'
 
 echo "▸ building on the server and reloading…"
