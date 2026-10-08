@@ -28,7 +28,7 @@ echo "▸ building on the server and reloading…"
   && export NEXT_TELEMETRY_DISABLED=1 \
   && npm ci --no-audit --no-fund >/dev/null \
   && npm run build >/dev/null \
-  && (pm2 reload creoit --update-env || pm2 start deploy/ecosystem.config.cjs) \
+  && pm2 startOrReload deploy/ecosystem.config.cjs --update-env \
   && pm2 save >/dev/null \
   && sleep 2 && curl -s -o /dev/null -w "site answers: HTTP %{http_code}\n" http://127.0.0.1:3000/'
 

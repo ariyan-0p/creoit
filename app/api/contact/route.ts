@@ -10,6 +10,7 @@
  *   CONTACT_TO   (where briefs go, default team@creoit.in)
  *   CONTACT_FROM (sender, default = SMTP_USER)
  *   CONTACT_DIR  (storage folder, default /var/lib/creoit, else ./data)
+ *   LEADS_API_URL, LEADS_INGEST_KEY  (also hand the brief to the CREOIT API so the team sees it in the admin panel)
  */
 
 import { appendFile, mkdir } from "node:fs/promises";
@@ -47,6 +48,20 @@ async function store(entry: object) {
     }
   }
   return false;
+}
+
+/** Hand the brief to the admin panel's database. Best effort: the file above is the safety net. */
+async function forward(b: Record<string, string>) {
+  const { LEADS_API_URL, LEADS_INGEST_KEY } = process.env;
+  if (!LEADS_API_URL || !LEADS_INGEST_KEY) return false;
+  const res = await fetch(LEADS_API_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-leads-key": LEADS_INGEST_KEY },
+    body: JSON.stringify(b),
+    signal: AbortSignal.timeout(4000),
+  });
+  if (!res.ok) throw new Error(`leads intake answered ${res.status}`);
+  return true;
 }
 
 async function mail(b: Record<string, string>) {
@@ -107,6 +122,12 @@ export async function POST(req: Request) {
   }
 
   const saved = await store({ at: new Date().toISOString(), ip, ...b });
+  let forwarded = false;
+  try {
+    forwarded = await forward(b);
+  } catch (e) {
+    console.error("contact forward failed", e);
+  }
   let mailed = false;
   try {
     mailed = await mail(b);
@@ -114,6 +135,6 @@ export async function POST(req: Request) {
     console.error("contact mail failed", e);
   }
 
-  if (!saved && !mailed) return Response.json({ ok: false, error: "Something went wrong on our side. Please email us directly." }, { status: 500 });
+  if (!saved && !mailed && !forwarded) return Response.json({ ok: false, error: "Something went wrong on our side. Please email us directly." }, { status: 500 });
   return Response.json({ ok: true });
 }

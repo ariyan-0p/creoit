@@ -3,6 +3,18 @@
  * brings it back after a server reboot (see `pm2 startup`).
  * The app listens only on 127.0.0.1; nginx is the public front door.
  */
+// Server-only secrets (never in git): KEY=value lines in /etc/creoit/web.env, e.g. the leads hand-over key.
+const fs = require("node:fs");
+const secrets = {};
+try {
+  for (const line of fs.readFileSync("/etc/creoit/web.env", "utf8").split("\n")) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
+    if (m) secrets[m[1]] = m[2];
+  }
+} catch {
+  /* no secrets file: the site still works, leads just stay in the backup file */
+}
+
 module.exports = {
   apps: [
     {
@@ -17,6 +29,7 @@ module.exports = {
       env: {
         NODE_ENV: "production",
         NEXT_TELEMETRY_DISABLED: "1",
+        ...secrets,
       },
     },
   ],
