@@ -55,6 +55,8 @@ export interface TeamMember {
   photo: string;
   funFact?: string;
   quote?: string;
+  /** A short code-editor snippet shown on a developer's card. */
+  code?: { file: string; lines: string[] };
   /** What this person does, in the words of our services (shown as chips). */
   craft?: string[];
   socials?: {

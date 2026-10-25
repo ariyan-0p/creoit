@@ -65,4 +65,23 @@ export const team: TeamMember[] = [
     photo: "/images/people/sushant-mehnlode.jpg",
     craft: ["Video Editing", "Reels & Films", "Motion"],
   },
+  {
+    id: "ariyan-samal",
+    name: "Ariyan Samal",
+    role: "Software Engineer",
+    bio: "Builds the software behind CREOIT, from this website to the client app and the tools the team works in, so the creative work always has a solid system under it.",
+    photo: "/images/people/ariyan-samal.jpg",
+    craft: ["Web Development", "Mobile Apps", "Backend & APIs", "Automation"],
+    code: {
+      file: "ariyan.ts",
+      lines: [
+        "const ariyan = {",
+        '  role: "Software Engineer",',
+        '  stack: ["Next.js", "Node"],',
+        '  builds: ["web", "apps"],',
+        '  status: "shipping",',
+        "};",
+      ],
+    },
+  },
 ];

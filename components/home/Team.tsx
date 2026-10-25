@@ -20,6 +20,7 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { team } from "@/content/team";
 import { Pill } from "@/components/ui/Pill";
 import { Portrait } from "@/components/ui/Portrait";
+import { CodeCard } from "@/components/ui/CodeCard";
 
 const MEMBERS = team;
 
@@ -179,6 +180,16 @@ export function Team() {
                           </li>
                         ))}
                       </ul>
+                    )}
+
+                    {/* a developer's card gets a code window; it steps aside on small or short screens so the card still fits */}
+                    {m.code && (
+                      <CodeCard
+                        file={m.code.file}
+                        lines={m.code.lines}
+                        accent={th.accent}
+                        className={`tm-k mt-4 max-w-md max-md:hidden md:mt-6 [@media(max-height:820px)]:hidden ${th.chip}`}
+                      />
                     )}
 
                     <div className="tm-k mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 md:mt-7">

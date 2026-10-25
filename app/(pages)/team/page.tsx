@@ -4,6 +4,7 @@ import { team } from "@/content/team";
 import { PageMotion } from "@/components/ui/PageMotion";
 import { PageHero } from "@/components/page/PageHero";
 import { Portrait } from "@/components/ui/Portrait";
+import { CodeCard } from "@/components/ui/CodeCard";
 import { Pill } from "@/components/ui/Pill";
 
 export const metadata: Metadata = {
@@ -38,12 +39,13 @@ export default function TeamPage() {
           {team.map((m, i) => {
             const hasName = m.name !== "Team Member";
             return (
-              <li key={m.id} data-reveal>
+              <li key={m.id} data-reveal className="min-w-0">
                 <Portrait photo={m.photo} label={hasName ? m.name : m.role} className={`aspect-[4/5] w-full rounded-[1.4rem] ${FRAMES[i % FRAMES.length]}`} />
                 <p className="mono mt-5 text-signal">{hasName ? m.role : `Team member 0${i + 1}`}</p>
                 <h2 className="display mt-2 text-[clamp(1.7rem,2.4vw,2.6rem)] leading-[0.98]">{hasName ? m.name : m.role}</h2>
                 {m.quote && <p className="serif-i mt-3 text-[1.25rem] leading-[1.15] text-ink/80">&ldquo;{m.quote}&rdquo;</p>}
                 <p className="mt-3 text-[0.92rem] leading-relaxed text-ink/65">{m.bio}</p>
+                {m.code && <CodeCard file={m.code.file} lines={m.code.lines} accent="text-signal" className="mt-5 border-ink/20 !bg-ink/[0.04] text-ink" />}
                 {m.craft && (
                   <ul className="mono mt-4 flex flex-wrap gap-2">
                     {m.craft.map((c) => (
